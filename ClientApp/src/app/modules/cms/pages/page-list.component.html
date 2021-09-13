@@ -1,0 +1,67 @@
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">
+      {{title}}
+    </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">{{translate('dashboard')}}</a>
+        <li class="breadcrumb-item"><a routerLink="/module/cms/webpages">{{translate('cms')}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{translate('pages')}}</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">{{translate('Web Pages')}}</h4>
+          <div class="card-actions">
+            <a routerLink="create" class="btn btn-outline-primary btn-rounded text-right"><i class="fa fa-plus mr-2"></i>{{translate('Create Page')}}</a>
+
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>{{ translate('Name')}}</th>
+                  <th>{{ translate('url')}}</th>
+                  <th>{{ translate('Is published')}}</th>
+                  <th>{{ translate('Published on')}}</th>
+                  <th>{{ translate('Created')}}</th>
+                  <th>{{ translate('Updated by')}}</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="pages.length < 1"><td colspan="6">{{ translate('Nothing to display')}}</td></tr>
+                <tr *ngFor="let page of pages">
+                  <td>
+                    <i class="fa fa-file-code text-success mr-2"></i>{{page.name}}
+                    <div class="table-links">
+                      <a [routerLink]="['/module/cms/webpages/edit/', page.id]">{{translate('Edit')}}</a>
+                      <div class="bullet"></div>
+                      <a href="javascript:void(0);" (click)="deletePage(page.id)" class="text-danger">{{translate('trash')}}</a>
+                    </div>
+                  </td>
+                  <td>{{page.slug}}</td>
+                  <td class="text-center">
+                    <i [ngClass]="{'text-danger fa fa-times': !page.isPublished, 'text-info fas fa-check': page.isPublished}"></i>
+                  </td>
+                  <td>{{page.publishedOn | date: mediumDate}}</td>
+                  <td>{{page.dateCreated | date: mediumDate}}</td>
+                  <td class="text-center">{{page.userName}}</td>
+                  <td>
+                    <i class="fa fa-home mr-2 pointer-hover text-info" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Set as Homepage" (click)="makeHomepage(page.id)"></i>
+                    <i class="fa fa-eye pointer-hover text-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Preview page" (click)="previewPage(page.id)"></i>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <delta-paginate items="smartTableResult.items" totalItems="smartTableResult.totalItems" pageSize="smartTableParam.pagination.pageSize" (changePage)="changePage($event)"></delta-paginate>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

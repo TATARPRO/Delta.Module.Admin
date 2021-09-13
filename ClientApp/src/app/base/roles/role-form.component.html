@@ -1,0 +1,48 @@
+
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">
+      {{title}}
+    </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">{{translate('dashboard')}}</a>
+        <li class="breadcrumb-item"><a routerLink="/admin-area/dashboard">{{translate('admin area')}}</a></li>
+        <li class="breadcrumb-item"><a routerLink="/admin-area/roles">{{translate('roles')}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page" *ngIf="!isEditMode">{{translate('create role')}}</li>
+        <li class="breadcrumb-item active" aria-current="page" *ngIf="isEditMode">{{translate('edit role')}}</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title" *ngIf="isEditMode"> {{translate('Edit Role')}}</h4>
+          <h4 class="card-title" *ngIf="!isEditMode">{{translate('create Role')}}</h4>
+          <p class="card-description text-danger" *ngFor="let error of validationErrors">{{ error}}</p>
+          <form class="forms-sample" role="form" [formGroup]="roleFormGroup" novalidate (submit)="submit()">
+            <fieldset>
+              <div class="form-group" *ngFor="let control of roleFormGroup.formControls" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <div class="form-check form-check-flat form-check-primary" *ngIf="control.type == 'checkbox'">
+                  <label class="form-check-label">
+                    <input formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]" type="checkbox" class="form-check-input">
+                    {{ translate(control.label)}}
+                    <i class="input-helper"></i>
+                  </label>
+                </div>
+                <label *ngIf="control.type != 'checkbox'" for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                <input *ngIf="control.type != 'checkbox'" type="{{control.type}}" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                  <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                </ul>
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm mr-2">{{ translate('Submit')}}</button>
+              <a class="btn btn-light btn-sm" routerLink="/admin-area/roles">{{ translate('Cancel')}}</a>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

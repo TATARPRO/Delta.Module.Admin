@@ -1,0 +1,47 @@
+<div class="modal fade" id="{{targetId}}" tabindex="-1" role="dialog" aria-labelledby="modalLabel-3" aria-hidden="true">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel-3">{{modalLabel}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="form-inline">
+            <div class="input-group">
+              <input type="text" class="form-control form-control-sm" placeholder="{{translate('search keyword')}}" aria-label="search keyword" [(ngModel)]="smartTableParam.search.predicateObject.Name" [ngModelOptions]="{standalone: true}">
+              <div class="input-group-append">
+                <button class="btn btn-sm btn-primary" type="button" (click)="search()">Search</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table">
+            <thead><tr><td>{{translate('Products')}}</td></tr></thead>
+            <tbody>
+              <tr *ngIf="smartTableResult.items.length < 1"><td>{{ translate('Nothing to display')}}</td></tr>
+              <tr *ngFor="let product of smartTableResult.items">
+                <td>
+                  <div class="form-check mt-0">
+                    <label class="form-check-label">
+                      <input type="checkbox" [checked]="checkSelected(product)" (click)="toggleSelectedProducts(product.id)" class="form-check-input">
+                      {{product.name}}
+                      <i class="input-helper"></i>
+                    </label>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <delta-paginate items="smartTableResult.items" totalItems="smartTableResult.totalItems" pageSize="smartTableParam.pagination.pageSize" (changePage)="changePage($event)"></delta-paginate>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-dismiss="modal">{{translate('Close')}}</button>
+      </div>
+    </div>
+  </div>
+</div>

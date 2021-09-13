@@ -1,0 +1,50 @@
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">
+      {{title}}
+    </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">{{translate('dashboard')}}</a>
+        <li class="breadcrumb-item"><a routerLink="/module/projectv/corev">{{translate('core')}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{translate('import history')}}</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">{{translate('Product Import history')}}</h4>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>{{ translate('Vendor')}}</th>
+                  <th>{{ translate('Import Date')}}</th>
+                  <th>{{ translate('Last Sync')}}</th>
+                  <th>{{ translate('No of products')}}</th>
+                  <th>{{ translate('Importer')}}</th>
+                  <td>{{translate('Action')}}</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="histories.length < 1"><td colspan="6">{{ translate('Nothing to display')}}</td></tr>
+                <tr *ngFor="let history of histories">
+                  <td>{{history.vendor}}</td>
+                  <td>{{history.importDate}}</td>
+                  <td>{{history.lastSyncDate}}</td>
+                  <td>{{history.pageSize}}</td>
+                  <td>{{history.user}}</td>
+                  <td><a (click)="synchronize(history.id)"><i class="fa fa-sync"></i></a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <delta-paginate items="smartTableResult.items" totalItems="smartTableResult.totalItems" pageSize="smartTableParam.pagination.pageSize" (changePage)="changePage($event)"></delta-paginate>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

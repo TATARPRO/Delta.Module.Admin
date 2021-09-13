@@ -1,0 +1,123 @@
+
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">
+      {{title}}
+    </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">{{translate('dashboard')}}</a>
+        <li class="breadcrumb-item"><a routerLink="/module/projectv/corev/import-history">{{translate('infrastructure')}}</a></li>
+        <li class="breadcrumb-item"><a routerLink="/module/projectv/yiwugo">{{translate('yuwigo products')}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{translate('fetch & import')}}</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title"> {{translate('Yuwigo Product import')}}</h4>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card-actions">
+                <button type="button" data-toggle="modal" data-target="#importForm" class="btn btn-outline-success btn-rounded text-right"><i class="fa fa-upload mr-2"></i>{{translate('Upload Products')}}</button>
+                <button type="button" data-toggle="modal" data-target="#industryForm" class="btn btn-outline-primary btn-rounded text-right"><i class="fa fa-download mr-2"></i>{{translate('Get Industries')}}</button>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <p class="card-description text-danger" *ngFor="let error of validationErrors">{{ error}}</p>
+              <form class="forms-sample" role="form" [formGroup]="yiwuImportFormGroup" novalidate (submit)="submit()">
+                <fieldset>
+                  <div class="row">
+                    <div class="col-md-6" *ngFor="let control of yiwuImportFormGroup.formControls">
+                      <div class="form-group" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                        <label *ngIf="control.type == 'text' || control.type == 'number'" for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                        <input *ngIf="control.type == 'text' || control.type == 'number'" type="{{control.type}}" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                        <section *ngIf="control.type == 'text' || control.type == 'number'">
+                          <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                            <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                          </ul>
+                        </section>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group" *ngVar="yiwuImportFormGroup.formControl('taxClassId') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                        <label>{{ translate('Tax Class')}}</label>
+                        <select class="form-control" formControlName="taxClassId" [(ngModel)]="model[control.modelProperty]">
+                          <option *ngFor="let taxClass of taxClasses" [value]="taxClass.id">{{taxClass.name}}</option>
+                        </select>
+                        <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                          <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary btn-sm mr-2">{{ translate('Submit')}}</button>
+                  <a class="btn btn-light btn-sm" routerLink="/module/projectv/vendor/import-history">{{ translate('Cancel')}}</a>
+                </fieldset>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="importForm" tabindex="-1" role="dialog" aria-labelledby="modalLabel-3" aria-hidden="true">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel-3">{{translate('Select Product List File')}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <file-upload [label]="translate('Product List File (csv)')" (change)="fileChanged($event)" [placeholder]="translate('Select File')"></file-upload>
+            <div class="form-group">
+              <loading5 *ngIf="isDownloading"></loading5>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-dismiss="modal">{{translate('Close')}}</button>
+        <button type="button" class="btn btn-primary" (click)="importProducts()">{{translate('Import')}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="industryForm" tabindex="-1" role="dialog" aria-labelledby="modalLabel-3" aria-hidden="true">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel-3">{{translate('Fetch Industries')}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label>{{translate('Market Code')}}</label>
+              <input type="number" name="marketCode" [ngModelOptions]="{standalone: true}" [(ngModel)]="marketCode" class="form-control">
+            </div>
+            <loading5 *ngIf="isDownloading"></loading5>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-dismiss="modal">{{translate('Close')}}</button>
+        <button type="button" class="btn btn-primary" (click)="getIndustries()">{{translate('Fetch')}}</button>
+      </div>
+    </div>
+  </div>
+</div>

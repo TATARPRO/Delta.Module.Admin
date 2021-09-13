@@ -1,0 +1,51 @@
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">
+      {{title}}
+    </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">{{translate('dashboard')}}</a>
+        <li class="breadcrumb-item"><a routerLink="/module/projectv/payment-providers">{{translate('payment providers')}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{translate('payment providers')}}</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">{{translate('Payment Providers')}}</h4>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>{{ translate('Name')}}</th>
+                  <th>{{ translate('Enabled')}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="paymentProviders.length < 1"><td colspan="6">{{ translate('Nothing to display')}}</td></tr>
+                <tr *ngFor="let provider of paymentProviders">
+                  <td>
+                    {{provider.name}}
+                    <div class="table-links">
+                      <a href="javascript:void(0);" (click)="enableProvider(provider.id)">{{translate('enable')}}</a>
+                      <div class="bullet"></div>
+                      <a href="javascript:void(0);" (click)="disableProvider(provider.id)" class="text-danger">{{translate('disable')}}</a>
+                      <div class="bullet"></div>
+                      <a routerLink="{{provider.configureUrl}}" class="text-prmiary">{{translate('settings')}}</a>
+                    </div>
+                  </td>
+                  <td>
+                    <i [ngClass]="{'text-danger fa fa-times': !provider.isEnabled, 'text-info fas fa-check': provider.isEnabled}"></i>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

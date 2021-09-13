@@ -1,0 +1,148 @@
+
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">
+      {{title}}
+    </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">{{translate('dashboard')}}</a>
+        <li class="breadcrumb-item"><a routerLink="/module/cms">{{translate('cms')}}</a></li>
+        <li class="breadcrumb-item"><a routerLink="/widgets">{{translate('Widgets')}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page" *ngIf="!isEditMode">{{translate('create X2 container widget')}}</li>
+        <li class="breadcrumb-item active" aria-current="page" *ngIf="isEditMode">{{translate('edit X2 container widget')}}</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title" *ngIf="isEditMode"> {{translate('Edit X2 container widget')}}</h4>
+          <h4 class="card-title" *ngIf="!isEditMode">{{translate('Create X2 container widget')}}</h4>
+          <p class="card-description text-danger" *ngFor="let error of validationErrors">{{ error}}</p>
+          <form class="forms-sample" role="form" [formGroup]="widgetFormGroup" novalidate (submit)="submit()">
+            <fieldset>
+              <div class="form-group" *ngVar="widgetFormGroup.formControl('name') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="">{{ translate(control.label)}}</label>
+                <input type="text" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model.name">
+                <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                  <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                </ul>
+              </div>
+
+              <div class="form-group">
+                <label for="">{{ translate('Widget Zone')}}</label>
+                <select class="form-control" name="widgetZoneId" [ngModelOptions]="{standalone: true}" [(ngModel)]="model.widgetZoneId">
+                  <option *ngFor="let zone of widgetZones" [value]="zone.id">{{zone.name}}</option>
+                </select>
+              </div>
+
+              <div class="form-group" *ngVar="widgetFormGroup.formControl('publishStart') as control">
+                <label for="">{{ translate(control.label)}}</label>
+                <input type="date" class="form-control" formControlName="publishStart" placeholder="Enter a date" [(ngModel)]="model.publishStart">
+              </div>
+
+              <div class="form-group" *ngVar="widgetFormGroup.formControl('publishEnd') as control">
+                <label for="">{{ translate(control.label)}}</label>
+                <input type="date" class="form-control" formControlName="publishEnd" placeholder="Enter a date" [(ngModel)]="model.publishEnd">
+              </div>
+
+              <div class="form-group" *ngVar="widgetFormGroup.formControl('displayOrder') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="">{{ translate(control.label)}}</label>
+                <input type="number" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" formControlName="{{control.modelProperty}}" [(ngModel)]="model.displayOrder">
+                <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                  <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                </ul>
+              </div>
+              <div class="form-group">
+                <div class="row">
+                  <div class="col-md-4">
+                    <h5>{{translate('Column 1')}}</h5>
+                    <hr />
+                    <div class="form-group form-inline" *ngFor="let child of model.settings.column1">
+                      <select type="text" class="form-control" [(ngModel)]="child.widgetInstanceId" [ngModelOptions]="{standalone: true}">
+                        <option *ngFor="let widget of instances" [value]="widget.id">{{widget.name}}</option>
+                      </select>
+                      <input type="text" class="form-control form-control-sm" placeholder="{{translate('widget order')}}" [(ngModel)]="child.displayOrder" [ngModelOptions]="{standalone: true}">
+                      <button type="button" (click)="removeChild1(child.widgetInstanceId)" class="btn btn-danger btn-sm mr-2"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <button type="button" (click)="addChild1()" class="btn btn-success btn-sm mr-2">{{ translate('Add')}}</button>
+                  </div>
+                  <div class="col-md-4">
+                    <h5>{{translate('Column 2')}}</h5>
+                    <hr />
+                    <div class="form-group form-inline" *ngFor="let child of model.settings.column2">
+                      <select type="text" class="form-control" [(ngModel)]="child.widgetInstanceId" [ngModelOptions]="{standalone: true}">
+                        <option *ngFor="let widget of instances" [value]="widget.id">{{widget.name}}</option>
+                      </select>
+                      <input type="text" class="form-control form-control-sm" placeholder="{{translate('widget order')}}" [ngModelOptions]="{standalone: true}" [(ngModel)]="child.displayOrder">
+                      <button type="button" (click)="removeChild2(child.widgetInstanceId)" class="btn btn-danger btn-sm mr-2"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <button type="button" (click)="addChild2()" class="btn btn-success btn-sm mr-2">{{ translate('Add')}}</button>
+                  </div>
+                  <div class="col-md-4">
+                    <h5>{{translate('Column 3')}}</h5>
+                    <hr />
+                    <div class="form-group form-inline" *ngFor="let child of model.settings.column3">
+                      <select type="text" class="form-control" [(ngModel)]="child.widgetInstanceId" [ngModelOptions]="{standalone: true}">
+                        <option *ngFor="let widget of instances" [value]="widget.id">{{widget.name}}</option>
+                      </select>
+                      <input type="text" class="form-control form-control-sm" placeholder="{{translate('widget order')}}" [ngModelOptions]="{standalone: true}" [(ngModel)]="child.displayOrder">
+                      <button type="button" (click)="removeChild3(child.widgetInstanceId)" class="btn btn-danger btn-sm mr-2"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <button type="button" (click)="addChild3()" class="btn btn-success btn-sm mr-2">{{ translate('Add')}}</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="row">
+                  <div class="col-md-4">
+                    <h5>{{translate('Column 4')}}</h5>
+                    <hr />
+                    <div class="form-group form-inline" *ngFor="let child of model.settings.column4">
+                      <select type="text" class="form-control" [(ngModel)]="child.widgetInstanceId" [ngModelOptions]="{standalone: true}">
+                        <option *ngFor="let widget of instances" [value]="widget.id">{{widget.name}}</option>
+                      </select>
+                      <input type="text" class="form-control form-control-sm" placeholder="{{translate('widget order')}}" [(ngModel)]="child.displayOrder" [ngModelOptions]="{standalone: true}">
+                      <button type="button" (click)="removeChild4(child.widgetInstanceId)" class="btn btn-danger btn-sm mr-2"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <button type="button" (click)="addChild4()" class="btn btn-success btn-sm mr-2">{{ translate('Add')}}</button>
+                  </div>
+                  <div class="col-md-4">
+                    <h5>{{translate('Column 5')}}</h5>
+                    <hr />
+                    <div class="form-group form-inline" *ngFor="let child of model.settings.column5">
+                      <select type="text" class="form-control" [(ngModel)]="child.widgetInstanceId" [ngModelOptions]="{standalone: true}">
+                        <option *ngFor="let widget of instances" [value]="widget.id">{{widget.name}}</option>
+                      </select>
+                      <input type="text" class="form-control form-control-sm" placeholder="{{translate('widget order')}}" [ngModelOptions]="{standalone: true}" [(ngModel)]="child.displayOrder">
+                      <button type="button" (click)="removeChild5(child.widgetInstanceId)" class="btn btn-danger btn-sm mr-2"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <button type="button" (click)="addChild5()" class="btn btn-success btn-sm mr-2">{{ translate('Add')}}</button>
+                  </div>
+                  <div class="col-md-4">
+                    <h5>{{translate('Column 6')}}</h5>
+                    <hr />
+                    <div class="form-group form-inline" *ngFor="let child of model.settings.column6">
+                      <select type="text" class="form-control" [(ngModel)]="child.widgetInstanceId" [ngModelOptions]="{standalone: true}">
+                        <option *ngFor="let widget of instances" [value]="widget.id">{{widget.name}}</option>
+                      </select>
+                      <input type="text" class="form-control form-control-sm" placeholder="{{translate('widget order')}}" [ngModelOptions]="{standalone: true}" [(ngModel)]="child.displayOrder">
+                      <button type="button" (click)="removeChild6(child.widgetInstanceId)" class="btn btn-danger btn-sm mr-2"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <button type="button" (click)="addChild6()" class="btn btn-success btn-sm mr-2">{{ translate('Add')}}</button>
+                  </div>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm mr-2">{{ translate('Submit')}}</button>
+              <a class="btn btn-light btn-sm" routerLink="/widget-instances">{{ translate('Cancel')}}</a>
+            </fieldset>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

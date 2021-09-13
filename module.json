@@ -1,0 +1,7 @@
+{
+  "id": "Delta.Module.Admin",
+  "name": "Delta Admin",
+  "isBundledWithHost": true,
+  "hasAdminControls":  false,
+  "version": "1.0.0"
+}

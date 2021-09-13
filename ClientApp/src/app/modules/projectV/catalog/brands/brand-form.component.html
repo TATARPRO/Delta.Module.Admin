@@ -1,0 +1,104 @@
+
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">
+      {{title}}
+    </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">{{translate('dashboard')}}</a>
+        <li class="breadcrumb-item"><a routerLink="/ecommerce">{{translate('ecommerce')}}</a></li>
+        <li class="breadcrumb-item"><a routerLink="/">{{translate('brands')}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page" *ngIf="!isEditMode">{{translate('create brand')}}</li>
+        <li class="breadcrumb-item active" aria-current="page" *ngIf="isEditMode">{{translate('edit brand')}}</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title" *ngIf="isEditMode"> {{translate('Edit Brand')}}</h4>
+          <h4 class="card-title" *ngIf="!isEditMode">{{translate('create Brand')}}</h4>
+          <p class="card-description text-danger" *ngFor="let error of validationErrors">{{ error}}</p>
+          <form class="forms-sample" role="form" [formGroup]="brandFormGroup" novalidate (submit)="submit()">
+            <fieldset>
+              <div class="form-group" *ngVar="brandFormGroup.formControl('name') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                <input type="text" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                  <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                </ul>
+              </div>
+              <div class="form-group" *ngVar="brandFormGroup.formControl('slug') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                <input type="text" [slugify]="model.name" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                  <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                </ul>
+              </div>
+              <div class="form-group" *ngVar="brandFormGroup.formControl('metaTitle') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                <input type="text" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                  <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                </ul>
+              </div>
+              <div class="form-group" *ngVar="brandFormGroup.formControl('metaKeywords') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                <input type="text" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                  <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                </ul>
+              </div>
+              <div class="form-group" *ngVar="brandFormGroup.formControl('metaDescription') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                <input type="text" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                  <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                </ul>
+              </div>
+              <div class="form-group" *ngVar="brandFormGroup.formControl('displayOrder') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                <input type="number" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                  <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                </ul>
+              </div>
+              <div class="form-group" *ngVar="brandFormGroup.formControl('iconClass') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                <input type="text" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                  <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                </ul>
+              </div>
+              <div class="form-group" *ngVar="brandFormGroup.formControl('isPublished') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <div class="form-check form-check-flat form-check-primary" *ngIf="control.type == 'checkbox'">
+                  <label class="form-check-label">
+                    <input formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]" type="checkbox" class="form-check-input">
+                    {{ translate(control.label)}}
+                    <i class="input-helper"></i>
+                  </label>
+                </div>
+              </div>
+              <div class="form-group">
+                <textarea ngxTrumbowygEditor placeholder="Use this area to describe the brand properly" formControlName="description" [(ngModel)]="model.description"></textarea>
+              </div>
+              <file-upload [label]="translate('Brand Image')" [placeholder]="translate('Select Image')" (change)="fileChanged($event)"></file-upload>
+              <div class="form-group">
+                <div class="d-flex mt-4" *ngIf="!model.thumbnailImage && model.thumbnailImageUrl">
+                  <img class="w-25 h-100 ml-2 rounded" [src]="model.thumbnailImageUrl" alt="brand Image" />
+                </div>
+                <div class="d-flex mt-4" *ngIf="model.thumbnailImage">
+                  <img class="w-25 h-100 ml-2 rounded" [src]="model.thumbnailPreviewUrl" alt="brand Image" />
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm mr-2">{{ translate('Submit')}}</button>
+              <a class="btn btn-light btn-sm" routerLink="/module/projectv/catalog/brands">{{ translate('Cancel')}}</a>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,121 @@
+
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">
+      {{title}}
+    </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">{{translate('dashboard')}}</a>
+        <li class="breadcrumb-item"><a routerLink="/ecommerce">{{translate('ecommerce')}}</a></li>
+        <li class="breadcrumb-item"><a routerLink="/">{{translate('Categories')}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page" *ngIf="!isEditMode">{{translate('create category')}}</li>
+        <li class="breadcrumb-item active" aria-current="page" *ngIf="isEditMode">{{translate('edit category')}}</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title" *ngIf="isEditMode"> {{translate('Edit Category')}}</h4>
+          <h4 class="card-title" *ngIf="!isEditMode">{{translate('Create Category')}}</h4>
+          <p class="card-description text-danger" *ngFor="let error of validationErrors">{{ error}}</p>
+          <form class="forms-sample" role="form" [formGroup]="categoryFormGroup" novalidate (submit)="submit()">
+            <fieldset>
+              <div class="form-group" *ngVar="categoryFormGroup.formControl('name') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                <input type="text" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                  <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                </ul>
+              </div>
+              <div class="form-group" *ngVar="categoryFormGroup.formControl('slug') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                <input type="text" [slugify]="model.name" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                  <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                </ul>
+              </div>
+              <div class="form-group" *ngVar="categoryFormGroup.formControl('metaTitle') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                <input type="text" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                  <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                </ul>
+              </div>
+              <div class="form-group" *ngVar="categoryFormGroup.formControl('metaKeywords') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                <input type="text" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                  <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                </ul>
+              </div>
+              <div class="form-group" *ngVar="categoryFormGroup.formControl('metaDescription') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                <input type="text" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                  <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                </ul>
+              </div>
+              <div class="form-group" *ngVar="categoryFormGroup.formControl('displayOrder') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                <input type="number" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                  <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                </ul>
+              </div>
+              <div class="form-group" *ngVar="categoryFormGroup.formControl('iconClass') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                <input type="text" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                  <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                </ul>
+              </div>
+              <div class="form-group" *ngVar="categoryFormGroup.formControl('isPublished') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <div class="form-check form-check-flat form-check-primary form-inline">
+                  <label class="form-check-label">
+                    <input formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]" type="checkbox" class="form-check-input">
+                    {{ translate(control.label)}}
+                    <i class="input-helper"></i>
+                  </label>
+                </div>
+              </div>
+              <div class="form-group" *ngVar="categoryFormGroup.formControl('includeInSearch') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <div class="form-check form-check-flat form-check-primary form-inline">
+                  <label class="form-check-label">
+                    <input formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]" type="checkbox" class="form-check-input">
+                    {{ translate(control.label)}}
+                    <i class="input-helper"></i>
+                  </label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="">{{ translate('Parent Category')}}</label>
+                <select class="form-control" name="parentId" [ngModelOptions]="{standalone: true}" [(ngModel)]="model.parentId">
+                  <option [value]="0">{{ translate('No Parent Category')}}</option>
+                  <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <textarea ngxTrumbowygEditor placeholder="Use this area to describe the category properly" formControlName="description" [(ngModel)]="model.description"></textarea>
+              </div>
+              <file-upload [label]="translate('Category Image')" [multiple]="false" [placeholder]="translate('Select Image')" (change)="fileChanged($event)"></file-upload>
+
+              <div class="form-group">
+                <div class="d-flex mt-4" *ngIf="!model.thumbnailImage && model.thumbnailImageUrl">
+                  <img class="w-25 h-100 ml-2 rounded" [src]="model.thumbnailImageUrl" alt="brand Image" />
+                </div>
+                <div class="d-flex mt-4" *ngIf="model.thumbnailImage">
+                  <img class="w-25 h-100 ml-2 rounded" [src]="model.thumbnailPreviewUrl" alt="brand Image" />
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm mr-2">{{ translate('Submit')}}</button>
+              <a class="btn btn-light btn-sm" routerLink="/module/projectv/categories">{{ translate('Cancel')}}</a>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

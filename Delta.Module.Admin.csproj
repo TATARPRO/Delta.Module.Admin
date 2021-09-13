@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    <IsPackable>false</IsPackable>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ClientApp\src\app\base\media\**" />
+    <Compile Remove="ClientApp\src\app\core\components\**" />
+    <Content Remove="ClientApp\src\app\base\media\**" />
+    <Content Remove="ClientApp\src\app\core\components\**" />
+    <EmbeddedResource Remove="ClientApp\src\app\base\media\**" />
+    <EmbeddedResource Remove="ClientApp\src\app\core\components\**" />
+    <None Remove="ClientApp\src\app\base\media\**" />
+    <None Remove="ClientApp\src\app\core\components\**" />
+  </ItemGroup>
+  
+</Project>

@@ -1,0 +1,10 @@
+/*
+    custom css for projectv
+*/
+.accordion .card .card-header.shipping {
+  padding: 10px;
+}
+
+.accordion.accordion-multi-colored .card .card-header, .accordion.accordion-multi-colored .card .card-body {
+  background: #392C70;
+}

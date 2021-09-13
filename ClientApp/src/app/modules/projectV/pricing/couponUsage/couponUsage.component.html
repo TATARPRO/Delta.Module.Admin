@@ -1,0 +1,49 @@
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">
+      {{title}}
+    </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">{{translate('dashboard')}}</a>
+        <li class="breadcrumb-item"><a routerLink="/module/projectv/pricing">{{translate('pricing')}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{translate('coupon usage')}}</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">{{translate('Coupon Usage')}}</h4>
+          <div class="card-actions">
+            <button type="button" (click)="downloadCouponUsage()" class="btn btn-outline-primary btn-rounded text-right"><i class="fa fa-download mr-2"></i>{{translate('Download')}}</button>
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>{{ translate('Coupon Rule Name')}}</th>
+                  <th>{{ translate('User')}}</th>
+                  <th>{{ translate('Coupon Code')}}</th>
+                  <th>{{ translate('Order Id')}}</th>
+                  <th>{{ translate('Date Used')}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="smartTableResult.items.length < 1"><td colspan="6">{{ translate('Nothing to display')}}</td></tr>
+                <tr *ngFor="let usage of smartTableResult.items">
+                  <td> {{usage.cartRuleName}}</td>
+                  <td> {{usage.fullName}}</td>
+                  <td> {{usage.couponCode}}</td>
+                  <td> {{usage.orderId}}</td>
+                  <td> {{usage.dateCreated}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,91 @@
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">
+      {{title}}
+    </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">{{translate('dashboard')}}</a>
+        <li class="breadcrumb-item"><a routerLink="/module/projectv/currencyv">{{translate('currency')}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{translate('exchange rates')}}</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">{{translate('Exchange Rates')}}</h4>
+          <div class="card-actions">
+            <a routerLink="create" class="btn btn-outline-primary btn-rounded text-right"><i class="fa fa-plus mr-2"></i>{{translate('Add Exchange Rates')}}</a>
+            <button type="button" data-toggle="modal" data-target="#importForm" class="btn btn-outline-success btn-rounded text-right"><i class="fa fa-upload mr-2"></i>{{translate('Upload')}}</button>
+            <button type="button" (click)="downloadRates()" class="btn btn-outline-primary btn-rounded text-right"><i class="fa fa-download mr-2"></i>{{translate('Download')}}</button>
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>{{ translate('Country A')}}</th>
+                  <th>{{ translate('Country A Value')}}</th>
+                  <th>{{ translate('Country B')}}</th>
+                  <th>{{ translate('Country B Value')}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="exchangeRates.length < 1"><td colspan="6">{{ translate('Nothing to display')}}</td></tr>
+                <tr *ngFor="let exchangeRate of exchangeRates">
+                  <td>
+                    {{exchangeRate.countryA}}
+                    <div class="table-links">
+                      <a [routerLink]="['edit', exchangeRate.id]">{{translate('edit')}}</a>
+                      <div class="bullet"></div>
+                      <a href="javascript:void(0);" (click)="deleteExchangeRate(exchangeRate.id)" class="text-danger">{{translate('trash')}}</a>
+                    </div>
+                  </td>
+                  <td> {{exchangeRate.countryAValue}}</td>
+                  <td> {{exchangeRate.countryB}}</td>
+                  <td> {{exchangeRate.countryBValue}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="importForm" tabindex="-1" role="dialog" aria-labelledby="modalLabel-3" aria-hidden="true">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel-3">{{translate('Select Exchange Rates File')}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label>{{translate('Exchange Rates File (csv)')}}</label>
+              <input type="file" name="csvFile" #csvFile (change)="fileChanged($event)" class="file-upload-default">
+              <div class="input-group col-xs-12">
+                <input type="text" class="form-control file-upload-info" name="CountryList" disabled placeholder="{{translate('Select File')}}">
+                <span class="input-group-append">
+                  <button class="file-upload-browse btn btn-primary" type="button">{{translate('Select')}}</button>
+                </span>
+              </div>
+              <loading5 *ngIf="isUploading"></loading5>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-dismiss="modal">{{translate('Close')}}</button>
+        <button type="button" class="btn btn-primary" (click)="importRates()">{{translate('Upload')}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+

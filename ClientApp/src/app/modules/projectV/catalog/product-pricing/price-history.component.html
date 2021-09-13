@@ -1,0 +1,81 @@
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">
+      {{translate(title)}}
+    </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">{{translate('dashboard')}}</a>
+        <li class="breadcrumb-item"><a routerLink="/ecommerce/dashboard">{{translate('ecommerce')}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{translate('product price history')}}</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">{{translate(title)}}</h4>
+          <div class="row mt-1">
+            <div class="col-md-12">
+              <div class="form-inline">
+                <select class="form-control mr-1" [(ngModel)]="smartTableParam.pagination.pageSize" ngModelOptions="{standalone: true}">
+                  <option [value]="10">10</option>
+                  <option [value]="20">20</option>
+                  <option [value]="30">30</option>
+                  <option [value]="40">40</option>
+                  <option [value]="50">50</option>
+                  <option [value]="100">100</option>
+                  <option [value]="200">200</option>
+                </select>
+                <select class="form-control mr-1" [(ngModel)]="smartTableParam.search.predicateObject.parameter" [ngModelOptions]="{standalone: true}">
+                  <option *ngFor="let option of searchOptions" [value]="option.id">{{option.name}}</option>
+                </select>
+                <div class="form-group">
+                  <div class="input-group">
+                    <input type="text" class="form-control form-control-sm" placeholder="{{translate('search keyword')}}" aria-label="search keyword" [(ngModel)]="smartTableParam.search.predicateObject.query" [ngModelOptions]="{standalone: true}">
+                    <div class="input-group-append">
+                      <button class="btn btn-sm btn-primary" type="button" (click)="search()">Search</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>{{ translate('Name')}}</th>
+                  <th>{{ translate('Old Price')}}</th>
+                  <th>{{ translate('Special Price')}}</th>
+                  <th>{{ translate('Special Price Start')}}</th>
+                  <th>{{ translate('Special Price End')}}</th>
+                  <th>{{ translate('SKU')}}</th>
+                  <th>{{ translate('GTIN')}}</th>
+                  <th>{{ translate('HS CODE')}}</th>
+                  <th>{{ translate('Slug')}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="smartTableResult.items.length < 1"><td colspan="6">{{ translate('Nothing to display')}}</td></tr>
+                <tr *ngFor="let product of smartTableResult.items">
+                  <td>{{product.name}}</td>
+                  <td>{{product.oldPrice}}</td>
+                  <td>{{product.specialPrice}}</td>
+                  <td>{{product.specialPriceStart | date: mediumDate}}</td>
+                  <td>{{product.specialPriceEnd | date: mediumDate}}</td>
+                  <td>{{product.sku}}</td>
+                  <td>{{product.gtin}}</td>
+                  <td>{{product.hsCode}}</td>
+                  <td>{{product.slug}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <delta-paginate items="smartTableResult.items" totalItems="smartTableResult.totalItems" pageSize="smartTableParam.pagination.pageSize" (changePage)="changePage($event)"></delta-paginate>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

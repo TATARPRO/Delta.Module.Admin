@@ -1,0 +1,43 @@
+
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">
+      {{title}}
+    </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">{{translate('dashboard')}}</a>
+        <li class="breadcrumb-item"><a routerLink="/settings">{{translate('settings')}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{translate('edit')}} {{title}}</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title"> {{translate('Edit')}} {{title}}</h4>
+          <p class="card-description text-danger" *ngFor="let error of validationErrors">{{ error}}</p>
+          <form class="forms-sample" role="form" novalidate (submit)="submit()">
+            <fieldset>
+              <div class="form-group" *ngFor="let control of model.settings; let i = index" >
+                <div class="form-check form-check-flat form-check-primary" *ngIf="control.inputType == 'checkbox'">
+                  <label class="form-check-label">
+                    <input name="{{control.key}}" [(ngModel)]="model.settings[i]['value']" type="checkbox" class="form-check-input">
+                    {{ translate(control.key)}}
+                    <i class="input-helper"></i>
+                  </label>
+                </div>
+                <label *ngIf="control.inputType != 'checkbox'" for="{{control.key}}">{{ translate(control.key)}}</label>
+                <input *ngIf="control.inputType != 'checkbox'" [(ngModel)]="model.settings[i]['value']" name="{{control.key}}" type="{{control.inputType}}" class="form-control" placeholder="">
+                
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm mr-2">{{ translate('Submit')}}</button>
+              <a class="btn btn-light btn-sm" routerLink="/settings">{{ translate('Cancel')}}</a>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

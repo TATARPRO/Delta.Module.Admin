@@ -1,0 +1,61 @@
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">
+      {{title}}
+    </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">{{translate('dashboard')}}</a>
+        <li class="breadcrumb-item"><a routerLink="/module/projectv/shipping-providers">{{translate('shipping providers')}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{translate('shipping providers')}}</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">{{translate('Shipping providers')}}</h4>
+          <div class="card-actions">
+            <a routerLink="create" class="btn btn-outline-primary btn-rounded text-right"><i class="fa fa-plus mr-2"></i>{{translate('Add Provider')}}</a>
+
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>{{ translate('Name')}}</th>
+                  <th>{{ translate('Email')}}</th>
+                  <th>{{ translate('Is Enabled')}}</th>
+                  <th>{{ translate('Telephone')}}</th>
+                  <th>{{ translate('To All Countries')}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="shippingProviders.length < 1"><td colspan="6">{{ translate('Nothing to display')}}</td></tr>
+                <tr *ngFor="let provider of shippingProviders">
+                  <td>
+                    {{provider.name}}
+                    <div class="table-links">
+                      <a [routerLink]="['edit', provider.id]">{{translate('edit')}}</a>
+                      <div class="bullet"></div>
+                      <a href="javascript:void(0);" (click)="deleteProvider(provider.id)" class="text-danger">{{translate('trash')}}</a>
+                    </div>
+                  </td>
+                  <td> {{provider.email}}</td>
+                  <td>
+                    <i [ngClass]="{'text-danger fa fa-times': !provider.isEnabled, 'text-info fas fa-check': provider.isEnabled}"></i>
+                  </td>
+                  <td> {{provider.phoneNumber}}</td>
+                  <td>
+                    <i [ngClass]="{'text-warning fa fa-times': !provider.toAllShippingEnabledCountries, 'text-primary fas fa-check': provider.toAllShippingEnabledCountries}"></i>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

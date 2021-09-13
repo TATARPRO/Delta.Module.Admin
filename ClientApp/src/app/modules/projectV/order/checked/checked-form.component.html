@@ -1,0 +1,247 @@
+
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">
+      {{title}}
+    </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">{{translate('dashboard')}}</a>
+        <li class="breadcrumb-item"><a routerLink="/module/projectv/order">{{translate('orders')}}</a></li>
+        <li class="breadcrumb-item"><a routerLink="/module/projectv/order/checked">{{translate('order')}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page" *ngIf="!isEditMode">{{translate('create order')}}</li>
+        <li class="breadcrumb-item active" aria-current="page" *ngIf="isEditMode">{{translate('edit order')}}</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title" *ngIf="isEditMode"> {{translate('Edit Order')}} <span class="font-weight-bolder">#{{model.mOrderId}}</span></h4>
+          <h4 class="card-title" *ngIf="!isEditMode">{{translate('create Order')}}</h4>
+          <p class="card-description text-danger" *ngFor="let error of validationErrors">{{ error}}</p>
+          <fieldset>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="fullname">{{ translate('Fullname, user search keyword')}}</label>
+                  <input type="text" class="form-control" [disabled]="isEditMode" id="fullname" placeholder="Username email or fullname" (change)="searchUser($event)">
+                  <div [ngClass]="{'show': !isSearchingCustomers && users}" class="dropdown-menu" aria-labelledby="fullname" x-placement="bottom-start" style="position: absolute; height: 300px; overflow-y:scroll; transform: translate3d(103px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
+                    <a *ngFor="let user of users" class="dropdown-item" (click)="selectUser(user.id)">{{user.userName}} -- {{user.email}}</a>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="Fullname">{{ translate('Fullname')}}</label>
+                  <input type="text" class="form-control" placeholder="Fullname" readonly [ngModelOptions]="{standalone: true}" [(ngModel)]="userInfo.fullName">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="Username">{{ translate('Username')}}</label>
+                  <input type="text" class="form-control" placeholder="Username" readonly [ngModelOptions]="{standalone: true}" [(ngModel)]="userInfo.userName">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="customerEmail">{{ translate('Email')}}</label>
+                  <input type="text" class="form-control" placeholder="customer email" readonly [ngModelOptions]="{standalone: true}" [(ngModel)]="userInfo.email">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="Phone">{{ translate('Phone Number')}}</label>
+                  <input type="text" class="form-control" placeholder="phone number" readonly [ngModelOptions]="{standalone: true}" [(ngModel)]="userInfo.phoneNumber">
+                </div>
+              </div>
+            </div>
+            <section *ngIf="model.customerId && model.customerId != ' '">
+              <div class="row">
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>{{ translate('Name')}}</th>
+                        <th>{{ translate('Quantity')}}</th>
+                        <th>{{ translate('Price')}}</th>
+                        <th>{{ translate('Can Order')}}</th>
+                        <th>{{ translate('Actions')}}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngIf="model.checkoutProducts.length < 1"><td colspan="2">{{ translate('No product selected')}}</td></tr>
+                      <tr *ngFor="let product of model.checkoutProducts">
+                        <td>{{product.name}} </td>
+                        <td>
+                          <input type="text" class="form-control form-control-sm" placeholder="{{translate('Quantity')}}" [ngModelOptions]="{standalone: true}" [(ngModel)]="product.quantity">
+                        </td>
+                        <td>{{product.priceString[2] != 0? product.priceString : product.price}}</td>
+                        <td>
+                          <i [ngClass]="{'text-danger fa fa-warning': !product.isAvailableToOrder, 'text-info fas fa-check': product.isAvailableToOrder}"></i>
+                        </td>
+                        <td>
+                          <button class="btn btn-sm btn-success" (click)="updateQuantity(product.id, product.productId)"><i class="fa fa-check"></i></button>
+                          <button class="btn btn-sm btn-danger" (click)="removeProduct(product.id, product.productId)"><i class="fa fa-trash"></i></button>
+                        </td>
+                      </tr>
+                      <tr style="position: relative;">
+                        <td colspan="3">
+                          <label for="kproductname">{{translate('Search Product')}}</label>
+                          <input type="text" class="form-control form-control-sm" id="kproductname" placeholder="{{translate('Product name')}}" (change)="searchProduct($event)">
+                          <div [ngClass]="{'show': !isSearchingProducts && products}" class="dropdown-menu" [attr.aria-labelledby]="kproductname" x-placement="bottom-start" style="position: absolute; height: 300px; overflow-y:scroll; transform: translate3d(103px, 38px, 0px); top: 0px; left: 0px; will-change: transform; z-index:4000">
+                            <a *ngFor="let product of products" class="dropdown-item" (click)="addProduct(product)">{{product.name}}</a>
+                          </div>
+                        </td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td colspan="3">{{ translate('Sub Total')}}</td>
+                        <td colspan="2">{{model.subTotalString}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            <hr />
+            <div class="row" *ngIf="model.checkoutProducts && model.checkoutProducts.length > 0">
+              <div class="col-lg-6" *ngIf="model.existingShippingAddresses && model.existingShippingAddresses.length > 0">
+                <h5>{{ translate('User Shipping Addresses')}}</h5>
+                <hr />
+                <div class="mt-4">
+                  <div class="accordion accordion-multi-colored" id="accordion-6" role="tablist">
+                    <div class="card" *ngFor="let address of model.existingShippingAddresses">
+                      <div class="card-header shipping" role="tab" id="heading-{{address.userAddressId}}">
+                        <h6 class="mb-0">
+                          <a data-toggle="collapse" href="#collapse-{{address.userAddressId}}" aria-expanded="false" [attr.aria-controls]="'collapse-' + address.userAddressId" class="collapsed">
+                            {{address.addressLine1}}&nbsp; &nbsp;<i class="fa fa-check-circle text-white" *ngIf="model.selectedShippingAddressId == address.userAddressId"></i>
+                          </a>
+                        </h6>
+                      </div>
+                      <div id="collapse-{{address.userAddressId}}" class="collapse" role="tabpanel" [attr.aria-labelledby]="'heading-' + address.userAddressId" data-parent="#accordion-4">
+                        <div class="card-body">
+                          <div class="row">
+                            <div class="col-md-12">
+                              <span class="d-block">{{ translate('Contact Name: ')}}{{address.contactName}}</span>
+                              <span class="d-block">{{ translate('Phone: ')}}{{address.phone}}</span>
+                              <span class="d-block">{{ translate('State Or Province: ')}}{{address.stateOrProvinceName}}</span>
+                              <span *ngIf="address.isCityEnabled" class="d-block">{{ translate('City: ')}}{{address.city}}</span>
+                              <span *ngIf="address.isZipCodeEnabled" class="d-block">{{ translate('Zip Code: ')}}{{address.zipCode}}</span>
+                              <span *ngIf="address.isDistrictEnabled" class="d-block">{{ translate('District: ')}}{{address.districtName}}</span>
+                              <span class="d-block">{{ translate('Country: ')}}{{address.countryName}}</span>
+                              <a class="btn btn-xs btn-outline-light btn-rounded float-right" (click)="updateShippingAddress(address.userAddressId)">{{translate('Use')}}</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <h5>{{translate('New Shipping Address')}}</h5>
+                <hr />
+                <form class="forms-sample" role="form" [formGroup]="shippingFormGroup" novalidate (submit)="submit()">
+                  <div class="form-group" *ngVar="shippingFormGroup.formControl('contactName') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                    <label>{{ translate(control.label)}}</label>
+                    <input type="text" class="form-control" placeholder="Contact Name" formControlName="contactName" [(ngModel)]="newShippingAddress[control.modelProperty]">
+                  </div>
+                  <div class="form-group" *ngVar="shippingFormGroup.formControl('addressLine1') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                    <label>{{ translate(control.label)}}</label>
+                    <input type="text" class="form-control" placeholder="Address Line 1" formControlName="addressLine1" [(ngModel)]="newShippingAddress[control.modelProperty]">
+                  </div>
+                  <div class="form-group" *ngVar="shippingFormGroup.formControl('phone') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                    <label>{{ translate(control.label)}}</label>
+                    <input type="text" class="form-control" placeholder="Phone number" formControlName="phone" [(ngModel)]="newShippingAddress[control.modelProperty]">
+                  </div>
+                  <div class="form-group" *ngVar="shippingFormGroup.formControl('countryId') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                    <label>{{ translate('Country')}}</label>
+                    <select class="form-control" formControlName="countryId" [ngModel]="newShippingAddress[control.modelProperty]" (change)="getStates($event)">
+                      <option *ngFor="let country of countries" [value]="country.id">{{country.name}}</option>
+                    </select>
+                  </div>
+                  <div class="form-group" *ngVar="shippingFormGroup.formControl('stateOrProvinceId') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                    <label>{{ translate('State or Province')}}</label>
+                    <select class="form-control" formControlName="stateOrProvinceId" [(ngModel)]="newShippingAddress[control.modelProperty]">
+                      <option *ngFor="let state of states" [value]="state.id">{{state.name}}</option>
+                    </select>
+                  </div>
+                  <div class="form-group" *ngVar="shippingFormGroup.formControl('city') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                    <label>{{ translate(control.label)}}</label>
+                    <input type="text" class="form-control" placeholder="City" [ngModelOptions]="{standalone: true}" [(ngModel)]="newShippingAddress[control.modelProperty]">
+                  </div>
+                  <div class="form-group" *ngVar="shippingFormGroup.formControl('zipCode') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                    <label>{{ translate(control.label)}}</label>
+                    <input type="text" class="form-control" placeholder="Zip Code" [ngModelOptions]="{standalone: true}" [(ngModel)]="newShippingAddress[control.modelProperty]">
+                  </div>
+                  <div class="form-group">
+                    <button *ngIf="isEditMode" type="button" class="btn btn-primary btn-sm mr-2" (click)="updateNewAddress()">{{ translate('Update Address')}}</button>
+                  </div>
+                </form>
+              </div>
+              <div class="col-md-6" *ngIf="model.shippingProviders && model.shippingProviders.length > 1">
+                <h5>{{ translate('Shipping Providers')}}</h5>
+                <hr />
+                <div class="mt-4">
+                  <div class="accordion accordion-multi-colored" id="accordion-6" role="tablist">
+                    <div class="card" *ngFor="let provider of model.shippingProviders">
+                      <div class="card-header shipping" role="tab" id="heading-{{provider.providerId}}">
+                        <h6 class="mb-0">
+                          <a data-toggle="collapse" href="#collapse-{{provider.providerId}}" aria-expanded="false" [attr.aria-controls]="'collapse-' + provider.providerId" class="collapsed">
+                            {{provider.providerName}}&nbsp; &nbsp;<i class="fa fa-check-circle text-white" *ngIf="model.selectedShippingProviderId == provider.providerId"></i>
+                          </a>
+                        </h6>
+                      </div>
+                      <div id="collapse-{{provider.providerId}}" class="collapse" role="tabpanel" [attr.aria-labelledby]="'heading-' + provider.providerId" data-parent="#accordion-4">
+                        <div class="card-body">
+                          <div class="row">
+                            <div class="col-md-12">
+                              <span class="d-block">{{translate('Shipping Cost: ')}}{{provider.shippingCostText}}</span>
+                              <span *ngIf="provider.showMinimumTotal" class="d-block">{{translate('Minimum Total: ')}}{{provider.minimumOrderTotal}}</span>
+                              <span class="d-block">{{translate('Order Note: ')}}{{provider.note}}</span>
+                              <a class="btn btn-xs btn-outline-light btn-rounded float-right" (click)="updateShippingAddressProvider(provider.providerId)">{{translate('Select')}}</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row" *ngIf="model.checkoutProducts && model.checkoutProducts.length > 0">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>{{ translate('Order Note')}}</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Order note" [ngModelOptions]="{standalone: true}" [(ngModel)]="model.orderNote" aria-label="Order note">
+                    <div class="input-group-append">
+                      <button class="btn btn-sm btn-primary" type="button" (click)="saveOrderNote()">{{ translate('Save')}}</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>{{ translate('Coupon Code')}}</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Coupon Code" [ngModelOptions]="{standalone: true}" [(ngModel)]="model['couponCode']" aria-label="Coupon Code">
+                    <div class="input-group-append">
+                      <button class="btn btn-sm btn-primary" type="button" (click)="applyCoupon()">{{ translate('Apply')}}</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </section>
+            <button type="submit" class="btn btn-primary btn-sm mr-2" (click)="submit()">{{ translate('Submit')}}</button>
+            <a class="btn btn-light btn-sm" routerLink="/module/projectv/orders/checked">{{ translate('Cancel')}}</a>
+          </fieldset>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

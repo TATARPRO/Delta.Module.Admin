@@ -1,0 +1,426 @@
+<div class="content-wrapper">
+    <div class="page-header">
+      <h3 class="page-title">{{translate(title)}}</h3>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a routerLink="/dashboard">{{translate('dashboard')}}</a>
+          <li class="breadcrumb-item"><a routerLink="/module/projectv/catalog">{{translate('ecommerce')}}</a></li>
+          <li class="breadcrumb-item"><a routerLink="/module/projectv/catalog/products">{{translate('product')}}</a></li>
+          <li class="breadcrumb-item active" aria-current="page" *ngIf="!isEditMode">{{translate('create product')}}</li>
+          <li class="breadcrumb-item active" aria-current="page" *ngIf="isEditMode">{{translate('edit product')}}</li>
+        </ol>
+      </nav>
+    </div>
+    <div class="row">
+      <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title" *ngIf="!isEditMode">  {{translate('Create Product')}} </h4>
+            <h4 class="card-title" *ngIf="isEditMode">{{translate('Edit Product')}}</h4>
+            <p class="card-description text-danger" *ngFor="let error of validationErrors">{{ error}}</p>
+            <form class="forms-sample" role="form" [formGroup]="productFormGroup" novalidate (submit)="submit()">
+              <div class="row">
+                <div class="col-md-12 mx-auto">
+                  <ul class="nav nav-pills nav-pills-custom" id="pills-tab-custom" role="tablist">
+                    <li class="nav-item">
+                      <a class="nav-link active" id="general-tab" data-toggle="pill" href="#pills-general" role="tab" aria-controls="pills-contact" aria-selected="true">
+                        {{translate('General Info')}}
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" id="variation-tab" data-toggle="pill" href="#pills-variation" role="tab" aria-controls="pills-contact" aria-selected="false">
+                        {{translate('Product Variations')}}
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" id="attribute-tab" data-toggle="pill" href="#pills-attribute" role="tab" aria-controls="pills-contact" aria-selected="false">
+                        {{translate('Product Attributes')}}
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" id="category-tab" data-toggle="pill" href="#pills-category" role="tab" aria-controls="pills-contact" aria-selected="false">
+                        {{translate('Category Mapping')}}
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" id="category-tab" data-toggle="pill" href="#pills-standard" role="tab" aria-controls="pills-contact" aria-selected="false">
+                        {{translate('Standardization')}}
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" id="related-tab" data-toggle="pill" href="#pills-related" role="tab" aria-controls="pills-contact" aria-selected="false">
+                        {{translate('Related Products')}}
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" id="csell-tab" data-toggle="pill" href="#pills-csell" role="tab" aria-controls="pills-contact" aria-selected="false">
+                        {{translate('Cross-sell Products')}}
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" id="seo-tab" data-toggle="pill" href="#pills-seo" role="tab" aria-controls="pills-contact" aria-selected="false">
+                        {{translate('SEO')}}
+                      </a>
+                    </li>
+                  </ul>
+                  <div class="tab-content tab-content-custom-pill" id="pills-tabContent-custom">
+                    <div class="tab-pane fade show active" id="pills-general" role="tabpanel" aria-labelledby="pills-home-tab-custom">
+                      <div class="row">
+                        <div class="col-md-6" *ngVar="productFormGroup.formControl('name') as control">
+                          <div class="form-group" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                            <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                            <input type="text" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="name" [(ngModel)]="model.product.name">
+                            <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                              <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                            </ul>
+                          </div>
+                        </div>
+                        <div class="col-md-6" *ngVar="productFormGroup.formControl('slug') as control">
+                          <div class="form-group" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                            <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                            <input type="text" [slugify]="model.product.name" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="slug" [(ngModel)]="model.product.slug">
+                            <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                              <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                            </ul>
+                          </div>
+                        </div>
+
+                        <div class="col-md-6" *ngVar="productFormGroup.formControl('price') as control">
+                          <div class="form-group" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                            <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                            <input type="number" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="price" [(ngModel)]="model.product.price">
+                          </div>
+                        </div>
+                        <div class="col-md-6" *ngVar="productFormGroup.formControl('oldPrice') as control">
+                          <div class="form-group" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                            <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                            <input type="number" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="oldPrice" [(ngModel)]="model.product.oldPrice">
+                          </div>
+                        </div>
+                        <div class="col-md-6" *ngVar="productFormGroup.formControl('specialPrice') as control">
+                          <div class="form-group" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                            <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                            <input type="number" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="specialPrice" [(ngModel)]="model.product.specialPrice">
+                          </div>
+                        </div>
+                        <div class="col-md-6" *ngVar="productFormGroup.formControl('specialPriceStart') as control">
+                          <div class="form-group" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                            <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                            <input type="date" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="specialPriceStart" [(ngModel)]="model.product.specialPriceStart">
+                          </div>
+                        </div>
+                        <div class="col-md-6" *ngVar="productFormGroup.formControl('specialPriceEnd') as control">
+                          <div class="form-group" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                            <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                            <input type="date" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="specialPriceEnd" [(ngModel)]="model.product.specialPriceEnd">
+                          </div>
+                        </div>
+
+                        <div class="col-md-6" *ngVar="productFormGroup.formControl('countryId') as control">
+                          <div class="form-group" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                            <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                            <select [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" formControlName="countryId" [(ngModel)]="model.product.countryId">
+                              <option *ngFor="let country of countries" [value]="country.id">{{country.name}}</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-6" *ngVar="productFormGroup.formControl('brandId') as control">
+                          <div class="form-group" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                            <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                            <select [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" formControlName="brandId" [(ngModel)]="model.product.brandId">
+                              <option *ngFor="let brand of brands" [value]="brand.id">{{brand.name}}</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-6" *ngVar="productFormGroup.formControl('taxClassId') as control">
+                          <div class="form-group" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                            <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                            <select [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" formControlName="taxClassId" [(ngModel)]="model.product.taxClassId">
+                              <option *ngFor="let taxClass of taxClasses" [value]="taxClass.id">{{taxClass.name}}</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-12" *ngVar="productFormGroup.formControl('shortDescription') as control">
+                          <div class="form-group" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                            <textarea ngxTrumbowygEditor placeholder="Enter a short description for your product" formControlName="shortDescription" [(ngModel)]="model.product.shortDescription"></textarea>
+                          </div>
+                        </div>
+                        <div class="col-md-12" *ngVar="productFormGroup.formControl('description') as control">
+                          <div class="form-group" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                            <textarea ngxTrumbowygEditor placeholder="Use this area to describe your product properly" formControlName="description" [(ngModel)]="model.product.description"></textarea>
+                          </div>
+                        </div>
+                        <div class="col-md-12" *ngVar="productFormGroup.formControl('specification') as control">
+                          <div class="form-group" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                            <textarea ngxTrumbowygEditor placeholder="Enter product specifications" formControlName="specification" [(ngModel)]="model.product.specification"></textarea>
+                          </div>
+                        </div>
+                        <div class="col-md-6" *ngVar="productFormGroup.formControl('isPublished') as control">
+                          <div class="form-group" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                            <div class="form-check form-check-flat form-check-primary" *ngIf="control.type == 'checkbox'">
+                              <label class="form-check-label">
+                                <input formControlName="isPublished" [(ngModel)]="model.product.isPublished" type="checkbox" class="form-check-input">
+                                {{ translate(control.label)}}
+                                <i class="input-helper"></i>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6" *ngVar="productFormGroup.formControl('isCallForPricing') as control">
+                          <div class="form-group" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                            <div class="form-check form-check-flat form-check-primary" *ngIf="control.type == 'checkbox'">
+                              <label class="form-check-label">
+                                <input formControlName="isCallForPricing" [(ngModel)]="model.product.isCallForPricing" type="checkbox" class="form-check-input">
+                                {{ translate(control.label)}}
+                                <i class="input-helper"></i>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6" *ngVar="productFormGroup.formControl('isFeatured') as control">
+                          <div class="form-group" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                            <div class="form-check form-check-flat form-check-primary" *ngIf="control.type == 'checkbox'">
+                              <label class="form-check-label">
+                                <input formControlName="isFeatured" [(ngModel)]="model.product.isFeatured" type="checkbox" class="form-check-input">
+                                {{ translate(control.label)}}
+                                <i class="input-helper"></i>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6" *ngVar="productFormGroup.formControl('stockTrackingIsEnabled') as control">
+                          <div class="form-group" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                            <div class="form-check form-check-flat form-check-primary" *ngIf="control.type == 'checkbox'">
+                              <label class="form-check-label">
+                                <input formControlName="stockTrackingIsEnabled" [(ngModel)]="model.product.stockTrackingIsEnabled" type="checkbox" class="form-check-input">
+                                {{ translate(control.label)}}
+                                <i class="input-helper"></i>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6" *ngVar="productFormGroup.formControl('isAllowToOrder') as control">
+                          <div class="form-group" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                            <div class="form-check form-check-flat form-check-primary" *ngIf="control.type == 'checkbox'">
+                              <label class="form-check-label">
+                                <input formControlName="isAllowToOrder" [(ngModel)]="model.product.isAllowToOrder" type="checkbox" class="form-check-input">
+                                {{ translate(control.label)}}
+                                <i class="input-helper"></i>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-12">
+                          <file-upload [label]="translate('Thumbnail Image')" [placeholder]="translate('Select Thumbnail')" (change)="setThumbnail($event)"></file-upload>
+                        </div>
+                        <div class="col-md-12">
+                          <h5>{{translate('Thumbnail Image')}}</h5>
+                          <div class="d-flex mt-4">
+                            <img *ngIf="model.thumbnailImage" class="w-25 h-100 ml-2 rounded" [src]="thumbnailPreviewUrl" alt="thumbnail Image" />
+                            <img *ngIf="model.product.thumbnailImageUrl && !model.thumbnailImage" class="w-25 h-100 ml-2 rounded" [src]="model.product.thumbnailImageUrl" alt="thumbnail Image" />
+                          </div>
+                        </div>
+                        <div class="col-md-12">
+                          <file-upload [label]="translate('Product Images')" [multiple]="true" (change)="setImages($event)" [placeholder]="translate('Select Images')"></file-upload>
+                        </div>
+                        <div class="col-md-12">
+                          <h5>{{translate('Product Images')}}</h5>
+                          <div class="d-flex mt-4" *ngIf="model.product.productImages.length > 0 && model.productImages.length < 1">
+                            <img class="w-25 h-100 ml-2 rounded" *ngFor="let media of model.product.productImages" [src]="media.mediaUrl" alt="{{media.caption}}" />
+                            <span class="img-editable"></span>
+                          </div>
+                          <div class="d-flex mt-4" *ngIf="model.productImages.length > 0">
+                            <img class="w-25 h-100 ml-2 rounded" *ngFor="let image of productImagePreviewUrl" [src]="image" alt="image" />
+                            <span class="img-editable"></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-variation" role="tabpanel" aria-labelledby="pills-profile-tab-custom">
+                      <div class="row">
+                        <div class="form-group">
+                          <div class="input-group">
+                            <select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="addingOption">
+                              <option *ngFor="let option of options" [value]="option.id">{{option.name}}</option>
+                            </select>
+                            <div class="input-group-append">
+                              <button class="btn btn-sm btn-primary" type="button" [disabled]="!addingOption" (click)="addOption()">{{translate('Add option')}}</button>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group" *ngIf="model.product.options.length > 0">
+                          <label class="control-label">{{translate('Option Values')}}</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-attribute" role="tabpanel" aria-labelledby="pills-contact-tab-custom">
+                      <div class="row">
+                        <div class="col-lg-6">
+                          <label>{{translate('Product Templates')}}</label>
+                          <div class="form-group">
+                            <div class="input-group">
+                              <select class="form-control" name="model.product.template" [(ngModel)]="model.product" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let template of productTemplates" [value]="template.id">{{template.name}}</option>
+                              </select>
+                              <div class="input-group-append">
+                                <button class="btn btn-sm btn-primary" [disabled]="!model.product" (click)="applyTemplate()" type="button">{{translate('Apply')}}</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-6">
+                          <div class="form-group">
+                            <label>{{translate('Available Attributes')}}</label>
+                            <div class="input-group">
+                              <select class="form-control" name="attributeGroup" [ngModelOptions]="{standalone: true}" [(ngModel)]="addingAttribute">
+                                <optgroup *ngFor="let attributeGroup of attributeGroups" label="{{attributeGroup.name}}">
+                                  <option *ngFor="let attribute of attribByGroup(attributeGroup.id)" [value]="attribute.id">{{attribute.name}}</option>
+                                </optgroup>
+                              </select>
+                              <div class="input-group-append">
+                                <button class="btn btn-sm btn-primary" [disabled]="!addingAttribute" (click)="addAttribute()" type="button">{{translate('Add Attribute')}}</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <hr />
+                      </div>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label>{{translate('Product Attributes')}}</label>
+                            <div class="table-responsive">
+                              <table class="table table-striped">
+                                <tr>
+                                  <th>{{translate('Attribute Name')}}</th>
+                                  <th>{{translate('Value')}}</th>
+                                  <th>{{translate('Action')}}</th>
+                                </tr>
+                                <tr *ngFor="let attr of model.product.attributes">
+                                  <td>{{attr.name}}</td>
+                                  <td class="form-inline"><input type="text" [ngModelOptions]="{standalone: true}" class="form-control" [(ngModel)]="attr.value" /></td>
+                                  <td>
+                                    <button (click)="deleteAttribute(attr.id)" type="button" class="btn btn-sm"><i class="fa fa-times"></i></button>
+                                  </td>
+                                </tr>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-category" role="tabpanel" aria-labelledby="pills-vibes-tab-custom">
+                      <div class="form-inline">
+                        <div class="badge badge-outline-primary" *ngFor="let category of categories">
+                          <div class="form-check mx-sm-2">
+                            <label class="form-check-label">
+                              <input type="checkbox" class="form-check-input" name="" [checked]="model.product.categoryIds.indexOf(category.id) > -1" (click)="toggleCategories(category.id)" />
+                              {{category.name}}
+                              <i class="input-helper"></i>
+                            </label>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-standard" role="tabpanel" aria-labelledby="pills-energy-tab-custom">
+                      <div class="row">
+                        <div class="col-md-6" *ngVar="productFormGroup.formControl('hsCode') as control">
+                          <div class="form-group" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                            <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                            <input type="text" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="metaTitle" [(ngModel)]="model.product.metaTitle">
+                          </div>
+                        </div>
+                        <div class="col-md-6" *ngVar="productFormGroup.formControl('sku') as control">
+                          <div class="form-group" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                            <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                            <input type="text" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="sku" [(ngModel)]="model.product.sku">
+                          </div>
+                        </div>
+                        <div class="col-md-6" *ngVar="productFormGroup.formControl('gtin') as control">
+                          <div class="form-group" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                            <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                            <input type="text" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="gtin" [(ngModel)]="model.product.gtin">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-related" role="tabpanel" aria-labelledby="pills-energy-tab-custom">
+                      <div class="table-responsive">
+                        <product-selection (sendSelectedProduct)="setRelatedProducts($event)" (sendRemovedProduct)="removeRelatedProducts($event)" modalLabel="Select Related Products" targetId="related-pro" [selectedProducts]="model.product.relatedProducts" isVisibleIndividually="true"></product-selection>
+                        <button type="button" data-toggle="modal" data-target="#related-pro" class="btn btn-primary btn-sm mr-2">{{ translate('Manage Related Products')}}</button>
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th>{{ translate('Name')}}</th>
+                              <th>{{ translate('Is Published')}}</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngIf="model.product.relatedProducts.length < 1"><td colspan="6">{{ translate('Nothing to display')}}</td></tr>
+                            <tr *ngFor="let product of model.product.relatedProducts">
+                              <td>{{product.name}} </td>
+                              <td>
+                                <i [ngClass]="{'text-danger fa fa-warning': !product.isPublished, 'text-info fas fa-check': product.isPublished}"></i>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-csell" role="tabpanel" aria-labelledby="pills-energy-tab-custom">
+                      <div class="table-responsive">
+                        <product-selection (sendSelectedProduct)="setCrossSellProducts($event)" (sendRemovedProduct)="removeCrossSellProducts($event)" modalLabel="Select Cross Sell Products" targetId="cross-sell" [selectedProducts]="model.product.crossSellProducts" isVisibleIndividually="true"></product-selection>
+                        <button type="button" data-toggle="modal" data-target="#cross-sell" class="btn btn-primary btn-sm mr-2">{{ translate('Manage Cross-sell Products')}}</button>
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th>{{ translate('Name')}}</th>
+                              <th>{{ translate('Is Published')}}</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngIf="model.product.crossSellProducts.length < 1"><td colspan="6">{{ translate('Nothing to display')}}</td></tr>
+                            <tr *ngFor="let product of model.product.crossSellProducts">
+                              <td>{{product.name}} </td>
+                              <td>
+                                <i [ngClass]="{'text-danger fa fa-primary': !product.isPublished, 'text-info fas fa-check': product.isPublished}"></i>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-seo" role="tabpanel" aria-labelledby="pills-energy-tab-custom">
+                      <div class="row">
+                        <div class="col-md-12" *ngVar="productFormGroup.formControl('metaTitle') as control">
+                          <div class="form-group" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                            <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                            <input type="text" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="metaTitle" [(ngModel)]="model.product.metaTitle">
+                          </div>
+                        </div>
+                        <div class="col-md-12" *ngVar="productFormGroup.formControl('metaKeywords') as control">
+                          <div class="form-group" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                            <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                            <input type="text" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="metaKeywords" [(ngModel)]="model.product.metaKeywords">
+                          </div>
+                        </div>
+                        <div class="col-md-12" *ngVar="productFormGroup.formControl('metaDescription') as control">
+                          <div class="form-group" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                            <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                            <input type="text" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="metaDescription" [(ngModel)]="model.product.metaDescription">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm mr-2">{{ translate('Submit')}}</button>
+              <a class="btn btn-light btn-sm" routerLink="/module/projectv/catalog/products">{{ translate('Cancel')}}</a>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

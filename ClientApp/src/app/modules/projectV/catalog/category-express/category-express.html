@@ -1,0 +1,85 @@
+
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">
+      {{title}}
+    </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">{{translate('dashboard')}}</a>
+        <li class="breadcrumb-item"><a routerLink="/module/cms">{{translate('cms')}}</a></li>
+        <li class="breadcrumb-item"><a routerLink="/widget-instances">{{translate('Widgets')}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page" *ngIf="!isEditMode">{{translate('create express category')}}</li>
+        <li class="breadcrumb-item active" aria-current="page" *ngIf="isEditMode">{{translate('edit express category')}}</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title" *ngIf="isEditMode"> {{translate('Edit Category Express')}}</h4>
+          <h4 class="card-title" *ngIf="!isEditMode">{{translate('Create Category Express')}}</h4>
+          <p class="card-description text-danger">{{translate('The express category widget accepts a maximum child depth of one')}}</p>
+          <p class="card-description text-danger" *ngFor="let error of validationErrors">{{ error}}</p>
+          <form class="forms-sample" role="form" [formGroup]="widgetFormGroup" novalidate (submit)="submit()">
+            <fieldset>
+              <div class="form-group" *ngVar="widgetFormGroup.formControl('name') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="">{{ translate(control.label)}}</label>
+                <input type="text" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model.name">
+                <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                  <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                </ul>
+              </div>
+
+              <div class="form-group">
+                <label for="">{{ translate('Widget Zone')}}</label>
+                <select class="form-control" name="widgetZoneId" [ngModelOptions]="{standalone: true}" [(ngModel)]="model.widgetZoneId">
+                  <option *ngFor="let zone of widgetZones" [value]="zone.id">{{zone.name}}</option>
+                </select>
+              </div>
+
+              <div class="form-group" *ngVar="widgetFormGroup.formControl('publishStart') as control">
+                <label for="">{{ translate(control.label)}}</label>
+                <input type="date" class="form-control" formControlName="publishStart" placeholder="Choose a date" [(ngModel)]="model.publishStart">
+              </div>
+
+              <div class="form-group" *ngVar="widgetFormGroup.formControl('publishEnd') as control">
+                <label for="">{{ translate(control.label)}}</label>
+                <input type="date" class="form-control" formControlName="publishEnd" placeholder="Choose a date" [(ngModel)]="model.publishEnd">
+              </div>
+
+              <div class="form-group" *ngVar="widgetFormGroup.formControl('displayOrder') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="">{{ translate(control.label)}}</label>
+                <input type="number" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" formControlName="{{control.modelProperty}}" [(ngModel)]="model.displayOrder">
+                <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                  <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                </ul>
+              </div>
+              <div class="form-group">
+                <h5>{{translate('Categories')}}</h5>
+                <hr />
+              </div>
+              <div class="form-inline">
+                <div class="badge badge-outline-primary" *ngFor="let category of categories">
+                  <div class="form-check mx-sm-2">
+                    <label class="form-check-label">
+                      <input type="checkbox" class="form-check-input" formControlName="categories" [checked]="model.settings.categories.indexOf(category.id) > -1" (click)="toggleCategories(category.id)" />
+                      {{category.name}}
+                      <i class="input-helper"></i>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-sm mr-2">{{ translate('Submit')}}</button>
+                <a class="btn btn-light btn-sm" routerLink="/widget-instances">{{ translate('Cancel')}}</a>
+              </div>
+            </fieldset>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

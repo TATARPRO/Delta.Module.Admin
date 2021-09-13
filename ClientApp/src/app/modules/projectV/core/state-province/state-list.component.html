@@ -1,0 +1,123 @@
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">
+      {{title}}
+    </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">{{translate('dashboard')}}</a>
+        <li class="breadcrumb-item"><a routerLink="/module/projectv/core">{{translate('infrastructure')}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{translate('states & province')}}</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">{{translate('States or Provinces')}}</h4>
+          <div class="card-actions">
+            <a routerLink="create" class="btn btn-outline-primary btn-rounded text-right"><i class="fa fa-plus mr-2"></i>{{translate('Create State/Province')}}</a>
+            <button type="button" data-toggle="modal" data-target="#importForm" class="btn btn-outline-success btn-rounded text-right"><i class="fa fa-upload mr-2"></i>{{translate('Upload')}}</button>
+            <button type="button" data-toggle="modal" data-target="#downloadForm"  class="btn btn-outline-primary btn-rounded text-right"><i class="fa fa-download mr-2"></i>{{translate('Download')}}</button>
+
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>{{ translate('Name')}}</th>
+                  <th>{{ translate('Code')}}</th>
+                  <th>{{ translate('Country')}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="smartTableResult.items.length < 1"><td colspan="6">{{ translate('Nothing to display')}}</td></tr>
+                <tr *ngFor="let state of smartTableResult.items">
+                  <td>
+                    {{state.name}}
+                    <div class="table-links">
+                      <a [routerLink]="['edit', state.id]">{{translate('Edit')}}</a>
+                      <div class="bullet"></div>
+                      <a href="javascript:void(0);" (click)="deleteState(state.id)" class="text-danger">{{translate('trash')}}</a>
+                    </div>
+                  </td>
+                  <td>{{state.code}}</td>
+                  <td>{{state.country}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="downloadForm" tabindex="-1" role="dialog" aria-labelledby="modalLabel-3" aria-hidden="true">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel-3">{{translate('Select Country')}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group" [ngClass]="{'has-danger': countryUploadHasError}">
+              <label for="country">{{ translate('Country')}}</label>
+              <select class="form-control" formControlOptions="{standalone: true}" [(ngModel)]="downloadCountryId">
+                <option *ngFor="let country of countries" [value]="country.id">{{country.name}}</option>
+              </select>
+              <ul *ngIf="statesDownloadHasError">
+                <li class="error mt-2 text-danger">{{translate('Select a country')}}.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-dismiss="modal">{{translate('Close')}}</button>
+        <button type="button" class="btn btn-primary" (click)="downloadStates()">{{translate('Download')}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="importForm" tabindex="-1" role="dialog" aria-labelledby="modalLabel-3" aria-hidden="true">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel-3">{{translate('Select States File')}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <file-upload [label]="translate('States File (csv)')" (change)="fileChanged($event)" [placeholder]="translate('Select File')"></file-upload>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group" [ngClass]="{'has-danger': countryUploadHasError}">
+              <label for="country">{{ translate('Country')}}</label>
+              <select class="form-control" formControlOptions="{standalone: true}" [(ngModel)]="uploadCountryId">
+                <option *ngFor="let country of countries" [value]="country.id">{{country.name}}</option>
+              </select>
+              <ul *ngIf="countryUploadHasError">
+                <li class="error mt-2 text-danger">{{translate('Select a country')}}.</li>
+              </ul>
+            </div>
+            <loading5 *ngIf="isUploading"></loading5>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-dismiss="modal">{{translate('Close')}}</button>
+        <button type="button" class="btn btn-primary" (click)="importStates()">{{translate('Upload')}}</button>
+      </div>
+    </div>
+  </div>
+</div>

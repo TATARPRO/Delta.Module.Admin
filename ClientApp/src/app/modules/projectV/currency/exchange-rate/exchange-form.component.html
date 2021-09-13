@@ -1,0 +1,60 @@
+
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">
+      {{title}}
+    </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">{{translate('dashboard')}}</a>
+        <li class="breadcrumb-item"><a routerLink="/module/projectv/currencyv">{{translate('currency')}}</a></li>
+        <li class="breadcrumb-item"><a routerLink="/module/projectv/currencyv/exchange-rate">{{translate('exchange rate')}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page" *ngIf="!isEditMode">{{translate('add exchange rate')}}</li>
+        <li class="breadcrumb-item active" aria-current="page" *ngIf="isEditMode">{{translate('edit exchange rate')}}</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title" *ngIf="isEditMode"> {{translate('Edit Exchange Rate')}}</h4>
+          <h4 class="card-title" *ngIf="!isEditMode">{{translate('create Exchange Rate')}}</h4>
+          <p class="card-description text-danger" *ngFor="let error of validationErrors">{{ error}}</p>
+          <form class="forms-sample" role="form" [formGroup]="exchangeRateFormGroup" novalidate (submit)="submit()">
+            <fieldset>
+              <div class="form-group" *ngVar="exchangeRateFormGroup.formControl('countryAId') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label>{{ translate(control.label)}}</label>
+                <select class="form-control" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                  <option *ngFor="let country of countries" [value]="country.id">{{country.name}}</option>
+                </select>
+              </div>
+              <div class="form-group" *ngVar="exchangeRateFormGroup.formControl('currencyAValue') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                <input type="{{control.type}}" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                  <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                </ul>
+              </div>
+              <div class="form-group" *ngVar="exchangeRateFormGroup.formControl('countryBId') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label>{{ translate(control.label)}}</label>
+                <select class="form-control" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                  <option *ngFor="let country of countries" [value]="country.id">{{country.name}}</option>
+                </select>
+              </div>
+              <div class="form-group" *ngVar="exchangeRateFormGroup.formControl('currencyBValue') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                <input type="{{control.type}}" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                  <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                </ul>
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm mr-2">{{ translate('Submit')}}</button>
+              <a class="btn btn-light btn-sm" routerLink="/module/projectv/currency/exchange-rate">{{ translate('Cancel')}}</a>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

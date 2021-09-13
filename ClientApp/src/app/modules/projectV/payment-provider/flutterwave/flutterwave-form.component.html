@@ -1,0 +1,47 @@
+
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">
+      {{title}}
+    </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">{{translate('dashboard')}}</a></li>
+        <li class="breadcrumb-item"><a routerLink="/module/projectv/payment-providers">{{translate('payment providers')}}</a></li>
+        <li class="breadcrumb-item"><a routerLink="/module/projectv/payment-providers/flutterwave">{{translate('flutterwave')}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{translate('update configuration')}}</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title"> {{translate('Flutterwave Configuration')}}</h4>
+          <form class="forms-sample" role="form" novalidate (submit)="submit()">
+            <fieldset>
+              <div class="form-group">
+                <label for="productionKey">{{ translate('Public Key')}}</label>
+                <input type="text" class="form-control" [ngModelOptions]="{standalone: true}" placeholder="{{ translate('Public Key')}}" [(ngModel)]="model.publicKey">
+              </div>
+              <div class="form-group">
+                <label for="developmentKey">{{ translate('Secret Key')}}</label>
+                <input type="text" class="form-control" [ngModelOptions]="{standalone: true}" placeholder="{{ translate('Secret Key')}}" [(ngModel)]="model.secretKey">
+              </div>
+              <div class="form-group">
+                <label for="encryptionKey">{{ translate('Encryption Key')}}</label>
+                <input type="text" class="form-control" [ngModelOptions]="{standalone: true}" placeholder="{{ translate('Encryption Key')}}" [(ngModel)]="model.encryptionKey">
+              </div>
+              <div class="form-group">
+                <label for="paymentFee">{{ translate('Payment Fee (%)')}}</label>
+                <input type="text" class="form-control" [ngModelOptions]="{standalone: true}" placeholder="{{ translate('Payment Fee')}}" [(ngModel)]="model.paymentFee">
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm mr-2">{{ translate('Submit')}}</button>
+              <a class="btn btn-light btn-sm" routerLink="/module/projectv/payment-providers">{{ translate('Cancel')}}</a>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

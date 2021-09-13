@@ -1,0 +1,174 @@
+
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">
+      {{title}}
+    </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">{{translate('dashboard')}}</a>
+        <li class="breadcrumb-item"><a routerLink="/module/projectv/pricing">{{translate('coupon')}}</a></li>
+        <li class="breadcrumb-item"><a routerLink="/module/projectv/pricing/coupon">{{translate('coupon')}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page" *ngIf="!isEditMode">{{translate('create coupon')}}</li>
+        <li class="breadcrumb-item active" aria-current="page" *ngIf="isEditMode">{{translate('edit coupon')}}</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title" *ngIf="isEditMode"> {{translate('Edit Coupon')}}</h4>
+          <h4 class="card-title" *ngIf="!isEditMode">{{translate('Create Coupon')}}</h4>
+          <p class="card-description text-danger" *ngFor="let error of validationErrors">{{ error}}</p>
+          <form class="forms-sample" role="form" [formGroup]="couponFormGroup" novalidate (submit)="submit()">
+            <div class="row">
+              <div class="col-md-12 mx-auto">
+                <ul class="nav nav-pills nav-pills-custom" id="pills-tab-custom" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link active" id="general-tab" data-toggle="pill" href="#pills-config" role="tab" aria-controls="pills-contact" aria-selected="true">
+                      {{translate('Configuration')}}
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="variation-tab" data-toggle="pill" href="#pills-product" role="tab" aria-controls="pills-contact" aria-selected="false">
+                      {{translate('Product Selection')}}
+                    </a>
+                  </li>
+                </ul>
+                <div class="tab-content tab-content-custom-pill" id="pills-tabContent-custom">
+                  <div class="tab-pane fade show active" id="pills-config" role="tabpanel" aria-labelledby="pills-energy-tab-custom">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group" *ngVar="couponFormGroup.formControl('name') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                          <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                          <input type="{{control.type}}" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                          <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                            <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group" *ngVar="couponFormGroup.formControl('description') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                          <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                          <input type="{{control.type}}" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group" *ngVar="couponFormGroup.formControl('startOn') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                          <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                          <input type="{{control.type}}" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group" *ngVar="couponFormGroup.formControl('endOn') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                          <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                          <input type="{{control.type}}" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group" *ngVar="couponFormGroup.formControl('discountAmount') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                          <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                          <input type="{{control.type}}" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group" *ngVar="couponFormGroup.formControl('maxDiscountAmount') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                          <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                          <input type="{{control.type}}" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group" *ngVar="couponFormGroup.formControl('discountStep') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                          <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                          <input type="{{control.type}}" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                        </div>
+                      </div>
+                      <div class="col-md-6"></div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <div class="form-check form-check-flat form-check-primary" *ngVar="couponFormGroup.formControl('isActive') as control">
+                            <label class="form-check-label">
+                              <input formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]" type="checkbox" class="form-check-input">
+                              {{translate(control.label)}}
+                              <i class="input-helper"></i>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <div class="form-check form-check-flat form-check-primary" *ngVar="couponFormGroup.formControl('isCouponRequired') as control">
+                            <label class="form-check-label">
+                              <input formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]" type="checkbox" class="form-check-input">
+                              {{translate(control.label)}}
+                              <i class="input-helper"></i>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6" *ngIf="model.isCouponRequired == true">
+                        <div class="form-group" *ngVar="couponFormGroup.formControl('couponCode') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                          <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                          <input type="{{control.type}}" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                        </div>
+                      </div>
+                      <div class="col-md-6" *ngIf="model.isCouponRequired == true">
+                        <div class="form-group" *ngVar="couponFormGroup.formControl('usageLimitPerCoupon') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                          <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                          <input type="{{control.type}}" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group" *ngVar="couponFormGroup.formControl('usageLimitPerCustomer') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                          <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                          <input type="{{control.type}}" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group" *ngVar="couponFormGroup.formControl('ruleToApply') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                          <label>{{translate(control.label)}}</label>
+                          <select class="form-control" formControlName="ruleToApply" [(ngModel)]="model[control.modelProperty]">
+                            <option value="fixed">{{translate('Fixed discount for entire cart')}}</option>
+                            <option value="percentage">{{translate('Percent of product price discount')}}</option>
+                          </select>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                  <div class="tab-pane fade" id="pills-product" role="tabpanel" aria-labelledby="pills-energy-tab-custom">
+                    <div class="table-responsive">
+                      <label>{{translate('Select products to apply coupon over or leave empty for all.')}}</label>
+                      <product-selection (sendSelectedProduct)="setSelectedProducts($event)" (sendRemovedProduct)="removeSelectedProducts($event)" modalLabel="Select Products" targetId="selected-pro" [selectedProducts]="model.products" isVisibleIndividually="true"></product-selection>
+                      <button type="button" data-toggle="modal" data-target="#selected-pro" class="btn btn-primary btn-sm mr-2">{{ translate('Select Products')}}</button>
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>{{ translate('Name')}}</th>
+                            <th>{{ translate('Is Published')}}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngIf="model.products.length < 1"><td colspan="2">{{ translate('No product selected')}}</td></tr>
+                          <tr *ngFor="let product of model.products">
+                            <td>{{product.name}} </td>
+                            <td>
+                              <i [ngClass]="{'text-danger fa fa-warning': !product.isPublished, 'text-info fas fa-check': product.isPublished}"></i>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm mr-2">{{ translate('Submit')}}</button>
+            <a class="btn btn-light btn-sm" routerLink="/module/projectv/pricing/coupon">{{ translate('Cancel')}}</a>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

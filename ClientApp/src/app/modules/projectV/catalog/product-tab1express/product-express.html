@@ -1,0 +1,138 @@
+
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">
+      {{title}}
+    </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">{{translate('dashboard')}}</a>
+        <li class="breadcrumb-item"><a routerLink="/module/cms">{{translate('cms')}}</a></li>
+        <li class="breadcrumb-item"><a routerLink="/widget-instances">{{translate('Widgets')}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page" *ngIf="!isEditMode">{{translate('create product widget')}}</li>
+        <li class="breadcrumb-item active" aria-current="page" *ngIf="isEditMode">{{translate('edit product widget')}}</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title" *ngIf="isEditMode"> {{translate('Edit Product widget')}}</h4>
+          <h4 class="card-title" *ngIf="!isEditMode">{{translate('Create Product widget')}}</h4>
+          <p class="card-description text-danger" *ngFor="let error of validationErrors">{{ error}}</p>
+          <form class="forms-sample" role="form" [formGroup]="widgetFormGroup" novalidate (submit)="submit()">
+            <fieldset>
+              <div class="form-group" *ngVar="widgetFormGroup.formControl('name') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="">{{ translate(control.label)}}</label>
+                <input type="text" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model.name">
+                <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                  <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                </ul>
+              </div>
+
+              <div class="form-group">
+                <label for="">{{ translate('Widget Zone')}}</label>
+                <select class="form-control" name="widgetZoneId" [ngModelOptions]="{standalone: true}" [(ngModel)]="model.widgetZoneId">
+                  <option *ngFor="let zone of widgetZones" [value]="zone.id">{{zone.name}}</option>
+                </select>
+              </div>
+
+              <div class="form-group" *ngVar="widgetFormGroup.formControl('publishStart') as control">
+                <label for="">{{ translate(control.label)}}</label>
+                <input type="date" class="form-control" formControlName="publishStart" placeholder="Choose a date" [(ngModel)]="model.publishStart">
+              </div>
+              <div class="form-group">
+                <label for="">{{ translate('Widget Icon')}}</label>
+                <input type="text" class="form-control" placeholder="Icon url" [ngModelOptions]="{standalone: true}" [(ngModel)]="model.iconUrl">
+              </div>
+              <div class="form-group" *ngVar="widgetFormGroup.formControl('publishEnd') as control">
+                <label for="">{{ translate(control.label)}}</label>
+                <input type="date" class="form-control" formControlName="publishEnd" placeholder="Choose a date" [(ngModel)]="model.publishEnd">
+              </div>
+
+              <div class="form-group" *ngVar="widgetFormGroup.formControl('displayOrder') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="">{{ translate(control.label)}}</label>
+                <input type="number" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" formControlName="{{control.modelProperty}}" [(ngModel)]="model.displayOrder">
+                <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                  <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                </ul>
+              </div>
+              <div class="row">
+                <div class="col-md-12" *ngFor="let item of model.items; let i = index">
+                  <hr style="border: 1px solid red" />
+                  <div class="form-group">
+                    <label for="">{{ translate('Tab Name')}}</label>
+                    <input type="text" class="form-control" [ngModelOptions]="{standalone: true}" placeholder="" [(ngModel)]="item.tabName">
+                  </div>
+                  <div class="form-group">
+                    <label for="">{{ translate('Category To Display')}}</label>
+                    <select class="form-control" name="categoryId" [ngModelOptions]="{standalone: true}" [(ngModel)]="item.categoryId">
+                      <option value="0">{{translate('All Categories')}}</option>
+                      <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="">{{ translate('Sort By Country')}}</label>
+                    <select class="form-control" name="widgetZoneId" [ngModelOptions]="{standalone: true}" [(ngModel)]="item.countryId">
+                      <option value="All">{{translate('All Countries')}}</option>
+                      <option *ngFor="let country of countries" [value]="country.id">{{country.name}}</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="">{{ translate('Number Of Products')}}</label>
+                    <input type="number" class="form-control" [ngModelOptions]="{standalone: true}" placeholder="" [(ngModel)]="item.numberOfProducts">
+                  </div>
+                  <div class="form-group">
+                    <label for="">{{ translate('Order Products By')}}</label>
+                    <select class="form-control" name="orderBy" [ngModelOptions]="{standalone: true}" [(ngModel)]="item.orderBy">
+                      <option *ngFor="let order of widgetOrderBy" [value]="order.id">{{order.name}}</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <div class="form-check form-check-flat form-check-primary">
+                      <label for="featuredOnly" class="form-check-label">
+                        <input id="featuredOnly" [ngModelOptions]="{standalone: true}" [(ngModel)]="item.featuredOnly" type="checkbox">
+                        {{ translate('Featured products only')}}
+                        <i class="input-helper"></i>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <file-upload (change)="leftImageChanged($event, i)" [label]="translate('Left Banner Image')" placeholder="{{translate('Select Image')}}"></file-upload>
+                      <div class="form-group">
+                        <div class="d-flex mt-4" *ngIf="item.leftImage">
+                          <img class="w-25 h-100 ml-2 rounded" [src]="item.leftImage" alt="banner Image" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <file-upload (change)="rightImageChanged($event, i)" [label]="translate('Right Banner Image')" placeholder="{{translate('Select Image')}}"></file-upload>
+                      <div class="form-group">
+                        <div class="d-flex mt-4" *ngIf="item.rightImage">
+                          <img class="w-25 h-100 ml-2 rounded" [src]="item.rightImage" alt="banner Image" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <button type="button" (click)="removeTab(i)" class="btn btn-sm btn-danger">{{translate('Trash tab')}}</button>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <button type="button" (click)="addTab()" class="btn btn-sm btn-success">{{translate('Add Tab')}}</button>
+                </div>
+              </div>
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-sm mr-2">{{ translate('Submit')}}</button>
+                <a class="btn btn-light btn-sm" routerLink="/widget-instances">{{ translate('Cancel')}}</a>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

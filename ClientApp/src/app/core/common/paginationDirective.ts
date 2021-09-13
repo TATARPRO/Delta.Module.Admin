@@ -1,0 +1,57 @@
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+
+import paginate from 'jw-paginate';
+
+@Component({
+  selector: 'delta-paginate',
+  template: `<ul *ngIf="pager.pages && pager.pages.length" class="pagination rounded pagination-primary mt-4">
+  <li [ngClass]="{disabled:pager.currentPage === 1}" class="page-item first-item">
+      <a (click)="setPage(1)" class="page-link">&lt;&lt;</a>
+  </li>
+  <li [ngClass]="{disabled:pager.currentPage === 1}" class="page-item previous-item">
+      <a (click)="setPage(pager.currentPage - 1)" class="page-link">&lt;</a>
+  </li>
+  <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}" class="page-item number-item">
+      <a (click)="setPage(page)" class="page-link">{{page}}</a>
+  </li>
+  <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}" class="page-item next-item">
+      <a (click)="setPage(pager.currentPage + 1)" class="page-link">&gt;</a>
+  </li>
+  <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}" class="page-item last-item">
+      <a (click)="setPage(pager.totalPages)" class="page-link">&gt;&gt;</a>
+  </li>
+</ul>`
+})
+export class DeltaPaginationComponent implements OnInit, OnChanges {
+  @Input() items: Array<any>;
+  @Input() totalItems: number
+  @Input() totalPages: number
+  @Output() changePage = new EventEmitter<any>(true);
+  @Input() initialPage = 1;
+  @Input() pageSize = 10;
+  @Input() maxPages = 10;
+
+  pager: any = {};
+
+  ngOnInit() {
+    // set page if items array isn't empty
+    if (this.items && this.items.length) {
+      this.setPage(this.initialPage);
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    // reset page if items array has changed
+    if (changes.items.currentValue !== changes.items.previousValue) {
+      this.setPage(this.initialPage);
+    }
+  }
+
+  private setPage(page: number) {
+    // get new pager object for specified page
+    this.pager = paginate(this.totalItems, page, this.pageSize, this.maxPages);
+    
+    // call change page function in parent component sending the requested page
+    this.changePage.emit(page);
+  }
+}

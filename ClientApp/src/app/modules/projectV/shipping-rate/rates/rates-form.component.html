@@ -1,0 +1,81 @@
+
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">
+      {{title}}
+    </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">{{translate('dashboard')}}</a>
+        <li class="breadcrumb-item"><a routerLink="/module/projectv/shipping-rates">{{translate('shipping rates')}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page" *ngIf="!isEditMode">{{translate('add shipping rate')}}</li>
+        <li class="breadcrumb-item active" aria-current="page" *ngIf="isEditMode">{{translate('edit shipping rate')}}</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title" *ngIf="isEditMode"> {{translate('Edit Shipping Rate')}}</h4>
+          <h4 class="card-title" *ngIf="!isEditMode">{{translate('Add Shipping Rate')}}</h4>
+          <p class="card-description text-danger" *ngFor="let error of validationErrors">{{ error}}</p>
+          <form class="forms-sample" role="form" [formGroup]="rateFormGroup" novalidate (submit)="submit()">
+            <fieldset>
+              <div class="form-group" *ngVar="rateFormGroup.formControl('name') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                <input type="{{control.type}}" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                  <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                </ul>
+              </div>
+              <div class="form-group" *ngVar="rateFormGroup.formControl('shippingProviderId') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                <select class="form-control" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                  <option *ngFor="let shippingProvider of shippingProviders" [value]="shippingProvider.id">{{shippingProvider.name}}</option>
+                </select>
+              </div>
+              <div class="form-group" *ngVar="rateFormGroup.formControl('taxClassId') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                <select class="form-control" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                  <option *ngFor="let taxClass of taxClasses" [value]="taxClass.id">{{taxClass.name}}</option>
+                </select>
+              </div>
+              <div class="form-group" *ngVar="rateFormGroup.formControl('countryId') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                <select class="form-control" formControlName="{{control.modelProperty}}" [ngModel]="model[control.modelProperty]" (change)="getStates($event)">
+                  <option [value]="">{{translate('All Countries')}}</option>
+                  <option *ngFor="let country of countries" [value]="country.id">{{country.name}}</option>
+                </select>
+              </div>
+              <div class="form-group" *ngVar="rateFormGroup.formControl('stateOrProvinceId') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                <select class="form-control" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                  <option [value]="0">{{translate('All States')}}</option>
+                  <option *ngFor="let state of states" [value]="state.id">{{state.name}}</option>
+                </select>
+              </div>
+              <div class="form-group" *ngVar="rateFormGroup.formControl('note') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                <input type="{{control.type}}" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+              </div>
+              <div class="form-group" *ngVar="rateFormGroup.formControl('shippingPrice') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                <input type="{{control.type}}" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+                <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                  <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                </ul>
+              </div>
+              <div class="form-group" *ngVar="rateFormGroup.formControl('minOrderSubtotal') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="{{control.modelProperty}}">{{ translate(control.label)}}</label>
+                <input type="{{control.type}}" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model[control.modelProperty]">
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm mr-2">{{ translate('Submit')}}</button>
+              <a class="btn btn-light btn-sm" routerLink="/module/projectv/shipping-rates">{{ translate('Cancel')}}</a>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,87 @@
+
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">
+      {{title}}
+    </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">{{translate('dashboard')}}</a>
+        <li class="breadcrumb-item"><a routerLink="/module/cms">{{translate('cms')}}</a></li>
+        <li class="breadcrumb-item"><a routerLink="/module/cms/menus">{{translate('menus')}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page" *ngIf="!isEditMode">{{translate('setup menu')}}</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title" *ngIf="isEditMode"> {{translate('Setup menu')}}</h4>
+          <p class="card-description text-danger" *ngFor="let error of validationErrors">{{ error}}</p>
+          <form class="forms-sample" role="form"  novalidate (submit)="submit()">
+            <fieldset>
+             
+              <div class="form-group" style="border: 1px solid #b1afaf; padding: 10px 10px; border-radius: 5px">
+                <div class="row">
+                  <div class="col-md-7" style="border-right: 1px solid #b1afaf;">
+                    <div class="form-group">
+                      <label>{{translate('Select entity type')}}</label>
+                      <select class="form-control" [ngModelOptions]="{standalone: true}" name="selectedEntityType" (change)="getEntities($event)" [ngModel]="selectedEntityType">
+                        <option *ngFor="let item of entityTypes" [value]="item.id">{{item.name}}</option>
+                      </select>
+                    </div>
+                    <div class="">
+                      <div class="table-responsive">
+                        <table class="table">
+                          <tbody>
+                            <tr *ngFor="let entity of entities">
+                              <td>
+                                <label>
+                                  <input type="checkbox" [checked]="entity.isChecked" (click)="toggleEntity(entity)"> {{entity.name}}
+                                </label>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <button class="btn btn-sm btn-primary" (click)="addMenuItems()">{{translate('Add to menu')}}</button>
+                    </div>
+                    <br /> <hr />
+                    <div class="row">
+                      <div class="col-12"><h5>{{translate('Add a custom link')}}</h5></div>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <label>{{translate('Name')}}</label>
+                          <input type="text" [ngModelOptions]="{standalone: true}" name="name" required [(ngModel)]="customLink.name" class="form-control">
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <label>{{translate('Link')}}</label>
+                          <input type="text" [ngModelOptions]="{standalone: true}" name="customLink" required [(ngModel)]="customLink.customLink" class="form-control">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <button type="button" (click)="addCustomLink()" class="btn btn-sm btn-primary">{{translate('Add to menu')}}</button>
+                      </div>
+                      </div>
+                    </div>
+                  <div class="col-md-5">
+                    <h5>{{translate('Menu Tree Hierachy')}}</h5>
+                    <small>{{translate('Drag items over to manipulate tree')}}</small>
+                    <button type="button" (click)="deleteNodes()" class="text-right text-danger btn btn-sm btn-light"><i class="fas fa-trash"></i></button>
+                    <tree-root class="ace-tree" [nodes]="menuTree" #tree [options]="treeOptions" (moveNode)="onNodeMoved($event)"></tree-root>
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-sm mr-2">{{ translate('Submit')}}</button>
+              <a class="btn btn-light btn-sm" routerLink="/module/cms/menus">{{ translate('Cancel')}}</a>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

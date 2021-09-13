@@ -1,0 +1,100 @@
+
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">
+      {{title}}
+    </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">{{translate('dashboard')}}</a>
+        <li class="breadcrumb-item"><a routerLink="/module/projectv">{{translate('cms')}}</a></li>
+        <li class="breadcrumb-item"><a routerLink="/widgets">{{translate('Widgets')}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page" *ngIf="!isEditMode">{{translate('create home carousel widget')}}</li>
+        <li class="breadcrumb-item active" aria-current="page" *ngIf="isEditMode">{{translate('edit home carousel widget')}}</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title" *ngIf="isEditMode"> {{translate('Edit Carousel Container')}}</h4>
+          <h4 class="card-title" *ngIf="!isEditMode">{{translate('Create Carousel Container')}}</h4>
+          <p class="card-description text-danger" *ngFor="let error of validationErrors">{{ error}}</p>
+          <form class="forms-sample" role="form" [formGroup]="widgetFormGroup" novalidate (submit)="submit()">
+            <fieldset>
+              <div class="form-group" *ngVar="widgetFormGroup.formControl('name') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="">{{ translate(control.label)}}</label>
+                <input type="text" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model.name">
+                <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                  <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                </ul>
+              </div>
+
+              <div class="form-group">
+                <label for="">{{ translate('Widget Zone')}}</label>
+                <select class="form-control" name="widgetZoneId" [ngModelOptions]="{standalone: true}" [(ngModel)]="model.widgetZoneId">
+                  <option *ngFor="let zone of widgetZones" [value]="zone.id">{{zone.name}}</option>
+                </select>
+              </div>
+
+              <div class="form-group" *ngVar="widgetFormGroup.formControl('publishStart') as control">
+                <label for="">{{ translate(control.label)}}</label>
+                <input type="date" class="form-control" formControlName="publishStart" placeholder="Choose a date" [(ngModel)]="model.publishStart">
+              </div>
+
+              <div class="form-group" *ngVar="widgetFormGroup.formControl('publishEnd') as control">
+                <label for="">{{ translate(control.label)}}</label>
+                <input type="date" class="form-control" formControlName="publishEnd" placeholder="Choose a date" [(ngModel)]="model.publishEnd">
+              </div>
+
+              <div class="form-group" *ngVar="widgetFormGroup.formControl('displayOrder') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="">{{ translate(control.label)}}</label>
+                <input type="number" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" formControlName="{{control.modelProperty}}" [(ngModel)]="model.displayOrder">
+                <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                  <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                </ul>
+              </div>
+              <div class="form-group">
+                <div class="row">
+                  <div class="col-md-4">
+                    <h5>{{translate('Category')}}</h5>
+                    <hr />
+                    <div class="form-group form-inline">
+                      <select type="text" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="model.settings.categoryId">
+                        <option [value]="0">{{translate('None')}}</option>
+                        <option *ngFor="let widget of instances" [value]="widget.id">{{widget.name}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <h5>{{translate('Carousel')}}</h5>
+                    <hr />
+                    <div class="form-group form-inline">
+                      <select type="text" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="model.settings.carouselId">
+                        <option [value]="0">{{translate('None')}}</option>
+                        <option *ngFor="let widget of instances" [value]="widget.id">{{widget.name}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <h5>{{translate('Flex')}}</h5>
+                    <hr />
+                    <div class="form-group form-inline">
+                      <select type="text" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="model.settings.flexId">
+                        <option [value]="0">{{translate('None')}}</option>
+                        <option *ngFor="let widget of instances" [value]="widget.id">{{widget.name}}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm mr-2">{{ translate('Submit')}}</button>
+              <a class="btn btn-light btn-sm" routerLink="/widget-instances">{{ translate('Cancel')}}</a>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

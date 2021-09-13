@@ -1,0 +1,126 @@
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">
+      {{title}}
+    </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">{{translate('dashboard')}}</a>
+        <li class="breadcrumb-item"><a routerLink="/module/file-manager">{{translate('file manager')}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{translate('home')}}</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">{{currentDirectory.name}}</h4>
+          <div class="card-actions">
+            <a data-target="#upload" data-toggle="modal" class="btn btn-outline-primary btn-rounded text-right"><i class="fa fa-plus mr-2"></i>{{translate('Upload')}}</a>
+            <a data-target="#folder" data-toggle="modal" class="btn btn-outline-primary btn-rounded text-right"><i class="fa fa-plus mr-2"></i>{{translate('Folder')}}</a>
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>{{ translate('Name')}}</th>
+                  <th>{{ translate('Type')}}</th>
+                  <th>{{ translate('Date Created')}}</th>
+                  <th>{{ translate('Url')}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="currentDirectory.folders.length < 1 && currentDirectory.files.length < 1"><td colspan="6">{{ translate('Empty folder')}}</td></tr>
+                <tr *ngFor="let folder of currentDirectory.folders">
+                  <td>
+                    <a href="javascript:void(0);" (click)="openFolder(folder.id)"><i class="fa fa-folder menu-icon mr-1"></i>{{folder.name}}</a>
+                    <div class="table-links">
+                      <div class="bullet"></div>
+                      <a href="javascript:void(0);" (click)="deleteFolder(folder.id)" class="text-danger">{{translate('trash')}}</a>
+                    </div>
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr *ngFor="let file of currentDirectory.files">
+                  <td>
+                    <i class="menu-icon mr-1" [ngClass]="{'fas fa-file': file.type == 'text',
+                       'fas fa-file-image': file.type == 'image',
+                       'fas fa-file-audio': file.type == 'audio',
+                       'fas fa-file-video': file.type == 'video',
+                       'fas fa-file-code': file.type == 'application'}" ></i>
+                    {{file.name}}
+                    <div class="table-links">
+                      <div class="bullet"></div>
+                      <a href="javascript:void(0);" (click)="deleteFile(file.id)" class="text-danger">{{translate('trash')}}</a>
+                    </div>
+                  </td>
+                  <td>{{file.type}}</td>
+                  <td>{{file.dateCreated | date: mediumDate}}</td>
+                  <td><a href="javascript:void(0);" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Click to Copy" (click)="copyUrl(file.url)">{{file.url}}</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="folder" tabindex="-1" role="dialog" aria-labelledby="modalLabel-3" aria-hidden="true">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel-3">{{translate('Create Folder')}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label>{{translate('Folder Name')}}</label>
+              <input type="text" name="name" class="form-control" [(ngModel)]="folder.name" [ngModelOptions]="{standalone: true}" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-dismiss="modal">{{translate('Close')}}</button>
+        <button type="button" class="btn btn-primary" (click)="createFolder()">{{translate('Create')}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="upload" tabindex="-1" role="dialog" aria-labelledby="modalLabel-3" aria-hidden="true">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel-3">{{translate('Upload File')}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <file-upload [label]="translate('File')" (change)="fileChanged($event)" [placeholder]="translate('Select File')"></file-upload>
+            <div class="form-group">
+              <linear-progress-bar class="pt-5" *ngIf="uploadPercent > 0" percent="{{uploadPercent}}" color="primary"></linear-progress-bar>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-dismiss="modal">{{translate('Close')}}</button>
+        <button type="button" class="btn btn-primary" (click)="uploadFile()">{{translate('Upload')}}</button>
+      </div>
+    </div>
+  </div>
+</div>

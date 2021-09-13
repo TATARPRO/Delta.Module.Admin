@@ -1,0 +1,129 @@
+
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">
+      {{title}}
+    </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">{{translate('dashboard')}}</a>
+        <li class="breadcrumb-item"><a routerLink="/module/cms">{{translate('cms')}}</a></li>
+        <li class="breadcrumb-item"><a routerLink="/widget-instances">{{translate('Widgets')}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page" *ngIf="!isEditMode">{{translate('create product classic')}}</li>
+        <li class="breadcrumb-item active" aria-current="page" *ngIf="isEditMode">{{translate('edit product classic')}}</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title" *ngIf="isEditMode"> {{translate('Edit Product Express Classic')}}</h4>
+          <h4 class="card-title" *ngIf="!isEditMode">{{translate('Create Product Express Classic')}}</h4>
+          <p class="card-description text-danger" *ngFor="let error of validationErrors">{{ error}}</p>
+          <form class="forms-sample" role="form" [formGroup]="widgetFormGroup" novalidate (submit)="submit()">
+            <fieldset>
+              <div class="form-group" *ngVar="widgetFormGroup.formControl('name') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="">{{ translate(control.label)}}</label>
+                <input type="text" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" placeholder="{{ translate(control.label)}}" formControlName="{{control.modelProperty}}" [(ngModel)]="model.name">
+                <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                  <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                </ul>
+              </div>
+              <div class="form-group">
+                <label for="">{{ translate('Widget Zone')}}</label>
+                <select class="form-control" name="widgetZoneId" [ngModelOptions]="{standalone: true}" [(ngModel)]="model.widgetZoneId">
+                  <option *ngFor="let zone of widgetZones" [value]="zone.id">{{zone.name}}</option>
+                </select>
+              </div>
+              <div class="form-group" *ngVar="widgetFormGroup.formControl('publishStart') as control">
+                <label for="">{{ translate(control.label)}}</label>
+                <input type="date" class="form-control" formControlName="publishStart" placeholder="Choose a date" [(ngModel)]="model.publishStart">
+              </div>
+              <div class="form-group" *ngVar="widgetFormGroup.formControl('publishEnd') as control">
+                <label for="">{{ translate(control.label)}}</label>
+                <input type="date" class="form-control" formControlName="publishEnd" placeholder="Choose a date" [(ngModel)]="model.publishEnd">
+              </div>
+              <div class="form-group" *ngVar="widgetFormGroup.formControl('displayOrder') as control" [ngClass]="{'has-danger': (isSubmitting || control.dirty) && control.invalid}">
+                <label for="">{{ translate(control.label)}}</label>
+                <input type="number" [ngClass]="{'form-control-danger': (isSubmitting || control.dirty) && control.invalid}" class="form-control" formControlName="{{control.modelProperty}}" [(ngModel)]="model.displayOrder">
+                <ul *ngIf="(isSubmitting || control.dirty) && control.invalid">
+                  <li class="error mt-2 text-danger" *ngFor="let error of control.getValidationMessages()">{{error}}</li>
+                </ul>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <h5>{{ translate('Sale Product')}}</h5>
+                  <div class="form-group">
+                    <label for="">{{ translate('Display Name')}}</label>
+                    <input type="text" class="form-control" [ngModelOptions]="{standalone: true}" placeholder="Name" [(ngModel)]="model.setting.saleSettings.name">
+                  </div>
+                  <div class="form-group">
+                    <label for="">{{ translate('Icon Url')}}</label>
+                    <input type="text" class="form-control" [ngModelOptions]="{standalone: true}" placeholder="Icon Url" [(ngModel)]="model.setting.saleSettings.iconUrl">
+                  </div>
+                  <div class="form-group">
+                    <label for="">{{ translate('Selected Product')}}</label>
+                    <input type="text" disabled class="form-control" [ngModelOptions]="{standalone: true}" placeholder="Selected Product" [ngModel]="saleProduct">
+                  </div>
+                  <product-selection (sendSelectedProduct)="setSaleProduct($event)" (sendRemovedProduct)="removeSaleProduct($event)" modalLabel="Select Sale Product" targetId="sale-product" [selectedProducts]="" isVisibleIndividually="true"></product-selection>
+                  <button type="button" data-toggle="modal" data-target="#sale-product" class="btn btn-primary btn-sm mr-2">{{ translate('Select Sale Product')}}</button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <h5>{{ translate('Promoted Products')}}</h5>
+                  <div class="form-group">
+                    <label for="">{{ translate('Display Name')}}</label>
+                    <input type="text" class="form-control" [ngModelOptions]="{standalone: true}" placeholder="Name" [(ngModel)]="model.setting.promotedSettings.name">
+                  </div>
+                  <div class="form-group">
+                    <label for="">{{ translate('Category To Display')}}</label>
+                    <select class="form-control" name="widgetZoneId" [ngModelOptions]="{standalone: true}" [(ngModel)]="model.setting.promotedSettings.categoryId">
+                      <option value="0">{{translate('All Categories')}}</option>
+                      <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="">{{ translate('Sort By Country')}}</label>
+                    <select class="form-control" name="widgetZoneId" [ngModelOptions]="{standalone: true}" [(ngModel)]="model.setting.promotedSettings.countryId">
+                      <option value="All">{{translate('All Countries')}}</option>
+                      <option *ngFor="let country of countries" [value]="country.id">{{country.name}}</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="">{{ translate('Number of Products')}}</label>
+                    <input type="number" class="form-control" [ngModelOptions]="{standalone: true}" placeholder="" [(ngModel)]="model.setting.promotedSettings.numberOfProducts">
+                  </div>
+                  <div class="form-group">
+                    <label for="">{{ translate('Order By')}}</label>
+                    <select class="form-control" name="orderBy" [ngModelOptions]="{standalone: true}" [(ngModel)]="model.setting.promotedSettings.orderBy">
+                      <option *ngFor="let order of widgetOrderBy" [value]="order.id">{{order.name}}</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="">{{ translate('Widget Icon')}}</label>
+                    <input type="text" class="form-control" placeholder="Icon url" [ngModelOptions]="{standalone: true}" [(ngModel)]="model.setting.promotedSettings.iconUrl">
+                  </div>
+                  <div class="form-group">
+                    <div class="form-check form-check-flat form-check-primary">
+                      <label for="featuredOnly" class="form-check-label">
+                        <input id="featuredOnly" [ngModelOptions]="{standalone: true}" [(ngModel)]="model.setting.promotedSettings.featuredOnly" type="checkbox">
+                        {{ translate('Featured products only')}}
+                        <i class="input-helper"></i>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-sm mr-2">{{ translate('Submit')}}</button>
+                <a class="btn btn-light btn-sm" routerLink="/widget-instances">{{ translate('Cancel')}}</a>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

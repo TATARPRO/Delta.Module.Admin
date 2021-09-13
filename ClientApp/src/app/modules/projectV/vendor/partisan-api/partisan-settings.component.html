@@ -1,0 +1,54 @@
+
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">
+      {{title}}
+    </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">{{translate('dashboard')}}</a>
+        <li class="breadcrumb-item"><a routerLink="/module/projectv/core">{{translate('infrastructure')}}</a></li>
+        <li class="breadcrumb-item"><a routerLink="/module/projectv/core/partisan-vendors">{{translate('partisan vendors')}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page" *ngIf="!isEditMode">{{translate('partisan vendor settings')}}</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title"> {{translate('Partisan Vendor Setting')}}</h4>
+          <p class="card-description text-danger" *ngFor="let error of validationErrors">{{ error}}</p>
+          <form class="forms-sample" role="form" novalidate (submit)="submit()">
+            <fieldset>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="apiUserId">{{ translate('Api User Id')}}</label>
+                    <input class="form-control" type="text" name="apiUserId" [ngModelOptions]="{standalone: true}" placeholder="{{ translate('Api User Id')}}" [(ngModel)]="model.apiUserId">
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="apiUserId">{{ translate('Authorization Key')}}</label>
+                    <input class="form-control" type="text" name="authorizationKey" [ngModelOptions]="{standalone: true}" placeholder="{{ translate('Authorization Key')}}" [(ngModel)]="model.authorizationKey">
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="vendorId">{{ translate('Assign a vendor')}}</label>
+                    <select class="form-control" required type="text" name="vendorId" [ngModelOptions]="{standalone: true}" [(ngModel)]="model.vendorId">
+                      <option *ngFor="let vendor of vendors" [value]="vendor.id">{{vendor.name}}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm mr-2">{{ translate('Submit')}}</button>
+              <a class="btn btn-light btn-sm" routerLink="/module/projectv/vendor/partisan-vendors">{{ translate('Cancel')}}</a>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

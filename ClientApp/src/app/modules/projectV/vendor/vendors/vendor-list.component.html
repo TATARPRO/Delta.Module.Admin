@@ -1,0 +1,70 @@
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">
+      {{title}}
+    </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">{{translate('dashboard')}}</a>
+        <li class="breadcrumb-item"><a routerLink="/module/projectv/vendor/vendors">{{translate('infrastructure')}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{translate('vendor')}}</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">{{translate('Vendor list')}}</h4>
+          <div class="card-actions">
+            <a routerLink="create" class="btn btn-outline-primary btn-rounded text-right"><i class="fa fa-plus mr-2"></i>{{translate('Create Vendor')}}</a>
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>{{ translate('Name')}}</th>
+                  <th>{{ translate('Contact email')}}</th>
+                  <th>{{ translate('Url')}}</th>
+                  <th>{{ translate('Created')}}</th>
+                  <th>{{ translate('Active')}}</th>
+                  <th>{{ translate('Verified')}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="smartTableResult.items.length < 1"><td colspan="6">{{ translate('Nothing to display')}}</td></tr>
+                <tr *ngFor="let vendor of smartTableResult.items">
+                  <td>
+                    {{vendor.name}}
+                    <div class="table-links">
+                      <a [routerLink]="['edit', vendor.id]">{{translate('edit')}}</a>
+                      <div class="bullet"></div>
+                      <a href="javascript:void(0);" (click)="deleteVendor(vendor.id)" class="text-danger">{{translate('trash')}}</a>
+                    </div>
+                  </td>
+                  <td>{{vendor.contactEmail}}</td>
+                  <td>{{vendor.slug}}</td>
+                  <td>{{vendor.dateCreated | date: mediumDate}}</td>
+                  <td>
+                    <i [ngClass]="{'text-warning fa fa-times': !vendor.isActive, 'text-info fas fa-check': vendor.isActive}"></i>
+                  </td>
+                  <td>
+                    <i [ngClass]="{'text-danger fa fa-times': !vendor.isVerified, 'text-success fas fa-check': vendor.isVerified}"></i>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <ul class="pagination rounded pagination-primary mt-4">
+            <li class="page-item active"><a class="page-link" href="javascript:void(0);">1</a></li>
+            <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
+            <li class="page-item"><a class="page-link" href="javascript:void(0);">3</a></li>
+            <li class="page-item"><a class="page-link" href="javascript:void(0);">4</a></li>
+            <li class="page-item"><a class="page-link" href="javascript:void(0);">5</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

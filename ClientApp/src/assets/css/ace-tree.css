@@ -1,0 +1,97 @@
+.ace-tree div.tree-children::before,
+.ace-tree tree-node::before {
+  content: "";
+  position: absolute;
+  border-left: 1px dotted #23527c;
+  height: 100%;
+  top: -14px;
+  left: 3px
+}
+
+.ace-tree {
+  padding-left: 5px;
+  margin-left: 0px
+}
+
+  .ace-tree div.tree-children {
+    position: relative;
+    padding-left: 0;
+    margin-left: 16px
+  }
+
+    .ace-tree div.tree-children::before {
+      left: 5px
+    }
+
+  .ace-tree tree-node > div > .node-wrapper {
+    margin-left: 24px
+  }
+
+    .ace-tree tree-node > div > .node-wrapper > .node-content-wrapper {
+      margin-left: 15px
+    }
+
+    .ace-tree tree-node > div > .node-wrapper > .node-content-wrapper{
+        padding-left: 10px;
+    }
+  .ace-tree tree-node > div.tree-node-leaf > .node-wrapper {
+    margin-left: 0
+  }
+
+  .ace-tree tree-node > div::before {
+    content: "";
+    position: absolute;
+    border-bottom: 1px dotted #23527c;
+    width: 20px;
+    margin-top: 12px;
+    left: 7px
+  }
+
+  .ace-tree tree-node > div .toggle-children-wrapper {
+    width: 13px;
+    height: 13px;
+    border: 1px solid #23527c;
+    position: absolute;
+    left: 15px;
+    margin-top: 5px;
+    margin-left: 0;
+    display: inline-block;
+    background-color: #fff;
+    z-index: 1
+  }
+
+    .ace-tree tree-node > div .toggle-children-wrapper::before {
+      content: "";
+      display: inline-block;
+      width: 7px;
+      border-top: 1px solid #23527c;
+      position: absolute;
+      top: 5px;
+      left: 2px
+    }
+
+    .ace-tree tree-node > div .toggle-children-wrapper.toggle-children-wrapper-collapsed::after {
+      content: "";
+      display: inline-block;
+      height: 7px;
+      border-left: 1px solid #23527c;
+      position: absolute;
+      top: 2px;
+      left: 5px
+    }
+
+    .ace-tree tree-node > div .toggle-children-wrapper .toggle-children {
+      display: none
+    }
+
+  .ace-tree tree-node > div .node-content-wrapper {
+    margin-left: 25px
+  }
+
+  .ace-tree > tree-node > div::before {
+    left: 14px
+  }
+
+  .ace-tree > tree-node > div > .node-wrapper > tree-node-expander > .toggle-children-wrapper {
+    left: 22px
+  }
